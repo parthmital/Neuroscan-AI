@@ -61,7 +61,7 @@ const Login = () => {
 			<div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-medical/5 rounded-full blur-[120px]" />
 			<div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[120px]" />
 
-			<Card className="w-full max-w-md border-border/40 bg-card/50 backdrop-blur-xl shadow-2xl animate-in fade-in zoom-in duration-500">
+			<Card className="w-full max-w-md border-border/40 bg-card/50 backdrop-blur-xl shadow-2xl">
 				<CardHeader className="space-y-3 text-center">
 					<div className="flex justify-center mb-2">
 						<div className="w-12 h-12 rounded-2xl bg-medical/20 flex items-center justify-center text-medical shadow-lg shadow-medical/10">
@@ -86,7 +86,7 @@ const Login = () => {
 								value={username}
 								onChange={(e) => setUsername(e.target.value)}
 								required
-								className="bg-background/50 border-border/50 focus:border-medical/50 transition-all duration-300"
+								className="bg-background/50 border-border/50 focus:border-medical/50"
 							/>
 						</div>
 						<div className="space-y-2">
@@ -103,16 +103,16 @@ const Login = () => {
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 								required
-								className="bg-background/50 border-border/50 focus:border-medical/50 transition-all duration-300"
+								className="bg-background/50 border-border/50 focus:border-medical/50"
 							/>
 						</div>
 						<Button
 							type="submit"
-							className="w-full bg-medical hover:bg-medical/90 text-white shadow-lg shadow-medical/20 h-11 text-base font-medium transition-all duration-300"
+							className="w-full bg-medical hover:bg-medical/90 text-white shadow-lg shadow-medical/20 h-11 text-base font-medium"
 							disabled={isLoading}
 						>
 							{isLoading ? (
-								<Loader2 className="w-5 h-5 animate-spin" />
+								<Loader2 className="w-5 h-5" />
 							) : (
 								<>
 									Sign In

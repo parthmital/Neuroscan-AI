@@ -67,10 +67,7 @@ export const StatsCards = () => {
 				return (
 					<div
 						key={stat.label}
-						className={cn(
-							"bg-card rounded-xl border border-border p-5 card-shine opacity-0 animate-fade-in",
-							`animate-fade-in-delay-${index}`,
-						)}
+						className={cn("bg-card rounded-xl border border-border p-5")}
 					>
 						<div className="flex items-center justify-between mb-3">
 							<span className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
@@ -82,12 +79,7 @@ export const StatsCards = () => {
 									colorMap[stat.type] || "bg-muted text-muted-foreground",
 								)}
 							>
-								<Icon
-									className={cn(
-										"w-4.5 h-4.5",
-										stat.type === "processing" && "animate-spin",
-									)}
-								/>
+								<Icon className={cn("w-4.5 h-4.5")} />
 							</div>
 						</div>
 						<p className="text-3xl font-bold text-foreground tracking-tight">

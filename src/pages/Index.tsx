@@ -16,7 +16,7 @@ const Index = () => {
 
 	if (configLoading || !config || !user) {
 		return (
-			<div className="animate-pulse space-y-8">
+			<div className="space-y-8">
 				<div className="h-20 bg-muted rounded-xl w-1/3" />
 				<div className="grid grid-cols-4 gap-4">
 					{[1, 2, 3, 4].map((i) => (

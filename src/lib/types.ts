@@ -32,16 +32,6 @@ export interface MRIScan {
 export interface AppConfig {
 	appName: string;
 	appSubtitle: string;
-	user: {
-		name: string;
-		firstName: string;
-		lastName: string;
-		email: string;
-		title: string;
-		department: string;
-		institution: string;
-		initials: string;
-	};
 	navItems: {
 		to: string;
 		icon: string;

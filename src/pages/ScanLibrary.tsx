@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Search, Eye } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -10,16 +10,22 @@ import { MRIScan, AppConfig } from "@/lib/types";
 
 const ScanLibrary = () => {
 	const navigate = useNavigate();
-	const [search, setSearch] = useState("");
+	const location = useLocation();
+	const querySearch = new URLSearchParams(location.search).get("search") || "";
+	const [search, setSearch] = useState(querySearch);
 	const [filter, setFilter] = useState<string>("all");
 	const { data: scans, isLoading: scansLoading } = useScans();
 	const { data: config, isLoading: configLoading } = useConfig();
 
+	useEffect(() => {
+		setSearch(querySearch);
+	}, [querySearch]);
+
 	if (scansLoading || configLoading || !scans || !config) {
 		return (
-			<div className="animate-pulse space-y-6">
+			<div className="space-y-6">
 				<div className="h-20 bg-muted rounded-xl w-1/3" />
-				<div className="grid grid-cols-3 gap-4">
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 					{[1, 2, 3].map((i) => (
 						<div key={i} className="h-48 bg-muted rounded-xl" />
 					))}
@@ -40,7 +46,7 @@ const ScanLibrary = () => {
 
 	const statusStyles: Record<string, string> = {
 		success: "bg-success/10 text-success",
-		medical: "bg-medical-light text-medical animate-pulse-medical",
+		medical: "bg-medical-light text-medical",
 		info: "bg-info/10 text-info",
 		destructive: "bg-destructive/10 text-destructive",
 		warning: "bg-warning/10 text-warning",

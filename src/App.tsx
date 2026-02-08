@@ -16,6 +16,7 @@ import { useNavigate, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./components/auth/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
@@ -23,12 +24,21 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 	const { isAuthenticated, isLoading } = useAuth();
 	const location = useLocation();
 
+	useEffect(() => {
+		const theme = localStorage.getItem("theme");
+		if (theme === "dark") {
+			document.documentElement.classList.add("dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+		}
+	}, []);
+
 	if (isLoading) {
 		return (
 			<div className="h-screen w-screen flex items-center justify-center bg-black">
 				<div className="flex flex-col items-center gap-4">
-					<Loader2 className="w-10 h-10 text-medical animate-spin" />
-					<p className="text-white/50 text-sm animate-pulse tracking-widest uppercase">
+					<Loader2 className="w-10 h-10 text-medical" />
+					<p className="text-white/50 text-sm tracking-widest uppercase">
 						Initialising Security
 					</p>
 				</div>
@@ -51,7 +61,12 @@ const App = () => (
 			<AuthProvider>
 				<Toaster />
 				<Sonner />
-				<BrowserRouter>
+				<BrowserRouter
+					future={{
+						v7_startTransition: true,
+						v7_relativeSplatPath: true,
+					}}
+				>
 					<Routes>
 						<Route path="/login" element={<Login />} />
 						<Route path="/register" element={<Register />} />

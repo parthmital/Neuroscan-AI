@@ -12,33 +12,38 @@ interface Overlays {
 interface SegmentationControlsProps {
 	overlays: Overlays;
 	onOverlaysChange: (overlays: Overlays) => void;
+	overlayColors?: {
+		wt: string;
+		tc: string;
+		et: string;
+	};
 }
-
-const regions = [
-	{
-		key: "wt" as const,
-		label: "Whole Tumour (WT)",
-		description: "Includes all tumour sub-regions",
-		color: "hsl(50, 100%, 50%)",
-	},
-	{
-		key: "tc" as const,
-		label: "Tumour Core (TC)",
-		description: "Necrotic core and enhancing tumour",
-		color: "hsl(0, 100%, 50%)",
-	},
-	{
-		key: "et" as const,
-		label: "Enhancing Tumour (ET)",
-		description: "Active tumour with contrast enhancement",
-		color: "hsl(220, 100%, 60%)",
-	},
-];
 
 export const SegmentationControls = ({
 	overlays,
 	onOverlaysChange,
+	overlayColors,
 }: SegmentationControlsProps) => {
+	const regions = [
+		{
+			key: "wt" as const,
+			label: "Whole Tumour (WT)",
+			description: "Includes all tumour sub-regions",
+			color: overlayColors?.wt || "hsl(50, 100%, 50%)",
+		},
+		{
+			key: "tc" as const,
+			label: "Tumour Core (TC)",
+			description: "Necrotic core and enhancing tumour",
+			color: overlayColors?.tc || "hsl(0, 100%, 50%)",
+		},
+		{
+			key: "et" as const,
+			label: "Enhancing Tumour (ET)",
+			description: "Active tumour with contrast enhancement",
+			color: overlayColors?.et || "hsl(220, 100%, 60%)",
+		},
+	];
 	const toggleRegion = (key: "wt" | "tc" | "et") => {
 		onOverlaysChange({ ...overlays, [key]: !overlays[key] });
 	};

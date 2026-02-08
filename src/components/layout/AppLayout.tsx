@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { AppSidebar } from "./AppSidebar";
 import { MobileNav } from "./MobileNav";
@@ -18,6 +19,7 @@ export const AppLayout = () => {
 	const { data: config } = useConfig();
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
+	const [searchQuery, setSearchQuery] = useState("");
 
 	return (
 		<div className="min-h-screen bg-background">
@@ -26,7 +28,7 @@ export const AppLayout = () => {
 				<AppSidebar />
 			</div>
 
-			<div className="lg:pl-[260px] transition-all duration-300">
+			<div className="lg:pl-[260px]">
 				{/* Top bar */}
 				<header className="sticky top-0 z-30 h-14 sm:h-16 bg-background/80 backdrop-blur-md border-b border-border flex items-center justify-between px-4 sm:px-8">
 					<div className="flex items-center gap-3">
@@ -36,14 +38,36 @@ export const AppLayout = () => {
 							<Input
 								placeholder={config?.dashboard.searchPlaceholder || "Search..."}
 								className="pl-9 h-9 bg-muted/50 border-none text-sm"
+								value={searchQuery}
+								onChange={(e) => setSearchQuery(e.target.value)}
+								onKeyDown={(e) => {
+									if (e.key === "Enter" && searchQuery.trim()) {
+										navigate(
+											`/scans?search=${encodeURIComponent(searchQuery.trim())}`,
+										);
+									}
+								}}
 							/>
 						</div>
 					</div>
 					<div className="flex items-center gap-3">
-						<button className="relative p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-							<Bell className="w-4.5 h-4.5" />
-							<span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-destructive" />
-						</button>
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<button className="relative p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted">
+									<Bell className="w-4.5 h-4.5" />
+									<span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-destructive" />
+								</button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent align="end" className="w-80">
+								<DropdownMenuLabel>Notifications</DropdownMenuLabel>
+								<DropdownMenuSeparator />
+								<div className="p-4 text-center">
+									<p className="text-sm text-muted-foreground">
+										No new notifications
+									</p>
+								</div>
+							</DropdownMenuContent>
+						</DropdownMenu>
 						<div className="h-8 w-[1px] bg-border mx-1 hidden sm:block" />
 						<div className="flex items-center gap-3 pl-1">
 							<div className="hidden sm:flex flex-col items-end">

@@ -29,9 +29,20 @@ const ScanDetail = () => {
 		opacity: 0.6,
 	});
 
+	const [overlayColors] = useState(() => {
+		const saved = localStorage.getItem("overlayColors");
+		return saved
+			? JSON.parse(saved)
+			: {
+					wt: "#eab308",
+					tc: "#ef4444",
+					et: "#3b82f6",
+				};
+	});
+
 	if (configLoading || scansLoading || !config) {
 		return (
-			<div className="space-y-6 animate-pulse">
+			<div className="space-y-6">
 				<div className="h-10 bg-muted rounded-xl w-24" />
 				<div className="h-20 bg-muted rounded-xl w-1/2" />
 				<div className="h-64 bg-muted rounded-xl" />
@@ -55,7 +66,7 @@ const ScanDetail = () => {
 
 	const statusStyles: Record<string, string> = {
 		success: "bg-success/10 text-success",
-		medical: "bg-medical-light text-medical animate-pulse-medical",
+		medical: "bg-medical-light text-medical",
 		info: "bg-info/10 text-info",
 		destructive: "bg-destructive/10 text-destructive",
 		warning: "bg-warning/10 text-warning",
@@ -154,12 +165,13 @@ const ScanDetail = () => {
 				<TabsContent value="viewer" className="space-y-0">
 					<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 						<div className="lg:col-span-2">
-							<SliceViewer overlays={overlays} />
+							<SliceViewer overlays={overlays} overlayColors={overlayColors} />
 						</div>
 						<div className="space-y-6">
 							<SegmentationControls
 								overlays={overlays}
 								onOverlaysChange={setOverlays}
+								overlayColors={overlayColors}
 							/>
 
 							{/* Scan metrics */}
@@ -299,7 +311,7 @@ const ScanDetail = () => {
 											<div className="flex items-center gap-2">
 												<div
 													className="w-2.5 h-2.5 rounded-sm"
-													style={{ background: "hsl(50, 100%, 50%)" }}
+													style={{ background: overlayColors.wt }}
 												/>
 												<span className="text-sm text-muted-foreground">
 													Whole Tumour (WT)
@@ -313,7 +325,7 @@ const ScanDetail = () => {
 											<div className="flex items-center gap-2">
 												<div
 													className="w-2.5 h-2.5 rounded-sm"
-													style={{ background: "hsl(0, 100%, 50%)" }}
+													style={{ background: overlayColors.tc }}
 												/>
 												<span className="text-sm text-muted-foreground">
 													Tumour Core (TC)
@@ -327,7 +339,7 @@ const ScanDetail = () => {
 											<div className="flex items-center gap-2">
 												<div
 													className="w-2.5 h-2.5 rounded-sm"
-													style={{ background: "hsl(220, 100%, 60%)" }}
+													style={{ background: overlayColors.et }}
 												/>
 												<span className="text-sm text-muted-foreground">
 													Enhancing Tumour (ET)

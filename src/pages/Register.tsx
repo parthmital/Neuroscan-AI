@@ -70,7 +70,7 @@ const Register = () => {
 			<div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-medical/5 rounded-full blur-[120px]" />
 			<div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[120px]" />
 
-			<Card className="w-full max-w-2xl border-border/40 bg-card/50 backdrop-blur-xl shadow-2xl animate-in fade-in zoom-in duration-500">
+			<Card className="w-full max-w-2xl border-border/40 bg-card/50 backdrop-blur-xl shadow-2xl">
 				<CardHeader className="space-y-3 text-center">
 					<div className="flex justify-center mb-2">
 						<div className="w-12 h-12 rounded-2xl bg-medical/20 flex items-center justify-center text-medical shadow-lg shadow-medical/10">
@@ -95,7 +95,7 @@ const Register = () => {
 									value={formData.fullName}
 									onChange={handleChange}
 									required
-									className="bg-background/50 border-border/50 focus:border-medical/50 transition-all duration-300"
+									className="bg-background/50 border-border/50 focus:border-medical/50"
 								/>
 							</div>
 							<div className="space-y-2">
@@ -107,7 +107,7 @@ const Register = () => {
 									value={formData.email}
 									onChange={handleChange}
 									required
-									className="bg-background/50 border-border/50 focus:border-medical/50 transition-all duration-300"
+									className="bg-background/50 border-border/50 focus:border-medical/50"
 								/>
 							</div>
 							<div className="space-y-2">
@@ -118,7 +118,7 @@ const Register = () => {
 									value={formData.username}
 									onChange={handleChange}
 									required
-									className="bg-background/50 border-border/50 focus:border-medical/50 transition-all duration-300"
+									className="bg-background/50 border-border/50 focus:border-medical/50"
 								/>
 							</div>
 							<div className="space-y-2">
@@ -130,7 +130,7 @@ const Register = () => {
 									value={formData.password}
 									onChange={handleChange}
 									required
-									className="bg-background/50 border-border/50 focus:border-medical/50 transition-all duration-300"
+									className="bg-background/50 border-border/50 focus:border-medical/50"
 								/>
 							</div>
 							<div className="space-y-2">
@@ -140,7 +140,7 @@ const Register = () => {
 									placeholder="Chief Radiologist"
 									value={formData.title}
 									onChange={handleChange}
-									className="bg-background/50 border-border/50 focus:border-medical/50 transition-all duration-300"
+									className="bg-background/50 border-border/50 focus:border-medical/50"
 								/>
 							</div>
 							<div className="space-y-2">
@@ -150,7 +150,7 @@ const Register = () => {
 									placeholder="Neuroradiology"
 									value={formData.department}
 									onChange={handleChange}
-									className="bg-background/50 border-border/50 focus:border-medical/50 transition-all duration-300"
+									className="bg-background/50 border-border/50 focus:border-medical/50"
 								/>
 							</div>
 							<div className="space-y-2 md:col-span-2">
@@ -160,18 +160,18 @@ const Register = () => {
 									placeholder="General Hospital Center"
 									value={formData.institution}
 									onChange={handleChange}
-									className="bg-background/50 border-border/50 focus:border-medical/50 transition-all duration-300"
+									className="bg-background/50 border-border/50 focus:border-medical/50"
 								/>
 							</div>
 						</div>
 
 						<Button
 							type="submit"
-							className="w-full bg-medical hover:bg-medical/90 text-white shadow-lg shadow-medical/20 h-11 text-base font-medium transition-all duration-300"
+							className="w-full bg-medical hover:bg-medical/90 text-white shadow-lg shadow-medical/20 h-11 text-base font-medium"
 							disabled={isLoading}
 						>
 							{isLoading ? (
-								<Loader2 className="w-5 h-5 animate-spin" />
+								<Loader2 className="w-5 h-5" />
 							) : (
 								<>
 									Complete Registration

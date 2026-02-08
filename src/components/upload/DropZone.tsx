@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Upload, FileImage, X, CheckCircle2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import type { Modality } from "@/lib/mock-data";
+import { useAuth } from "@/components/auth/AuthContext";
 
 interface UploadedFile {
 	id: string;
@@ -89,6 +91,11 @@ export const DropZone = () => {
 		return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 	};
 
+	const { token } = useAuth();
+
+	const [patientName, setPatientName] = useState("");
+	const [patientId, setPatientId] = useState("");
+
 	const handleStartProcessing = async () => {
 		if (files.length === 0) return;
 
@@ -98,10 +105,15 @@ export const DropZone = () => {
 		files.forEach((f) => {
 			formData.append("files", f.file);
 		});
+		formData.append("patientName", patientName || "Uploaded Scan");
+		formData.append("patientId", patientId);
 
 		try {
 			const response = await fetch("http://localhost:8000/api/process-mri", {
 				method: "POST",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
 				body: formData,
 			});
 
@@ -113,10 +125,9 @@ export const DropZone = () => {
 			setFiles((prev) => prev.map((f) => ({ ...f, status: "done" })));
 
 			// Navigate to ScanDetail with the real data
-			// We can store it in a global state or pass via navigation state
 			setTimeout(() => {
 				navigate(`/scan/${result.id}`, { state: { scanResult: result } });
-			}, 1000);
+			}, 500);
 		} catch (error) {
 			console.error("Upload error:", error);
 			setFiles((prev) => prev.map((f) => ({ ...f, status: "error" })));
@@ -171,6 +182,34 @@ export const DropZone = () => {
 					Batch upload supported · Multi-modal MRI (FLAIR, T1, T1CE, T2)
 				</p>
 			</div>
+
+			{/* Patient Details */}
+			{files.length > 0 && (
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5 rounded-2xl bg-muted/30 border border-border">
+					<div className="space-y-2">
+						<label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							Patient Name
+						</label>
+						<Input
+							placeholder="e.g. John Doe"
+							value={patientName}
+							onChange={(e) => setPatientName(e.target.value)}
+							className="bg-background border-border/50"
+						/>
+					</div>
+					<div className="space-y-2">
+						<label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							Patient ID (Optional)
+						</label>
+						<Input
+							placeholder="e.g. PT-10492"
+							value={patientId}
+							onChange={(e) => setPatientId(e.target.value)}
+							className="bg-background border-border/50"
+						/>
+					</div>
+				</div>
+			)}
 
 			{/* Modality selector */}
 			<div>

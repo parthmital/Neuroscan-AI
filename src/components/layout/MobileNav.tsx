@@ -9,12 +9,14 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { useConfig } from "@/hooks/use-config";
+import { useAuth } from "../auth/AuthContext";
 
 export const MobileNav = () => {
 	const [open, setOpen] = useState(false);
 	const { data: config, isLoading } = useConfig();
+	const { user } = useAuth();
 
-	if (isLoading || !config) {
+	if (isLoading || !config || !user) {
 		return null; // Side nav is hidden while loading
 	}
 
@@ -98,15 +100,18 @@ export const MobileNav = () => {
 					<div className="flex items-center gap-3 px-3 py-2">
 						<div className="w-8 h-8 rounded-full bg-sidebar-accent flex items-center justify-center shrink-0">
 							<span className="text-xs font-semibold text-sidebar-primary">
-								{config.user.initials}
+								{user.fullName
+									.split(" ")
+									.map((n) => n[0])
+									.join("")}
 							</span>
 						</div>
 						<div className="flex-1 min-w-0">
 							<p className="text-xs font-medium text-sidebar-foreground truncate">
-								{config.user.name}
+								{user.fullName}
 							</p>
 							<p className="text-[10px] text-sidebar-foreground/50 truncate">
-								{config.user.title}
+								{user.title || "Physician"}
 							</p>
 						</div>
 					</div>

@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { Slider } from "@/components/ui/slider";
-import { cn } from "@/lib/utils";
+import { cn, hexToRgba } from "@/lib/utils";
 
 interface Overlays {
 	wt: boolean;
@@ -11,6 +11,11 @@ interface Overlays {
 
 interface SliceViewerProps {
 	overlays: Overlays;
+	overlayColors?: {
+		wt: string;
+		tc: string;
+		et: string;
+	};
 }
 
 const TOTAL_SLICES = 155;
@@ -23,6 +28,7 @@ function drawSlice(
 	slice: number,
 	total: number,
 	overlays: Overlays,
+	colors: { wt: string; tc: string; et: string },
 ) {
 	const progress = slice / total;
 	const cx = w / 2;
@@ -201,7 +207,10 @@ function drawSlice(
 
 		// Segmentation overlays
 		if (overlays.wt) {
-			ctx.fillStyle = `rgba(255, 230, 0, ${overlays.opacity * 0.35 * tumorIntensity})`;
+			ctx.fillStyle = hexToRgba(
+				colors.wt,
+				overlays.opacity * 0.35 * tumorIntensity,
+			);
 			ctx.beginPath();
 			ctx.ellipse(
 				tumorX,
@@ -213,13 +222,19 @@ function drawSlice(
 				Math.PI * 2,
 			);
 			ctx.fill();
-			ctx.strokeStyle = `rgba(255, 230, 0, ${overlays.opacity * 0.6 * tumorIntensity})`;
+			ctx.strokeStyle = hexToRgba(
+				colors.wt,
+				overlays.opacity * 0.6 * tumorIntensity,
+			);
 			ctx.lineWidth = 1.5;
 			ctx.stroke();
 		}
 
 		if (overlays.tc) {
-			ctx.fillStyle = `rgba(255, 50, 50, ${overlays.opacity * 0.4 * tumorIntensity})`;
+			ctx.fillStyle = hexToRgba(
+				colors.tc,
+				overlays.opacity * 0.4 * tumorIntensity,
+			);
 			ctx.beginPath();
 			ctx.ellipse(
 				tumorX,
@@ -231,13 +246,19 @@ function drawSlice(
 				Math.PI * 2,
 			);
 			ctx.fill();
-			ctx.strokeStyle = `rgba(255, 50, 50, ${overlays.opacity * 0.7 * tumorIntensity})`;
+			ctx.strokeStyle = hexToRgba(
+				colors.tc,
+				overlays.opacity * 0.7 * tumorIntensity,
+			);
 			ctx.lineWidth = 1.5;
 			ctx.stroke();
 		}
 
 		if (overlays.et) {
-			ctx.fillStyle = `rgba(50, 120, 255, ${overlays.opacity * 0.5 * tumorIntensity})`;
+			ctx.fillStyle = hexToRgba(
+				colors.et,
+				overlays.opacity * 0.5 * tumorIntensity,
+			);
 			ctx.beginPath();
 			ctx.ellipse(
 				tumorX + tumorR * 0.1,
@@ -249,7 +270,10 @@ function drawSlice(
 				Math.PI * 2,
 			);
 			ctx.fill();
-			ctx.strokeStyle = `rgba(50, 120, 255, ${overlays.opacity * 0.8 * tumorIntensity})`;
+			ctx.strokeStyle = hexToRgba(
+				colors.et,
+				overlays.opacity * 0.8 * tumorIntensity,
+			);
 			ctx.lineWidth = 1.5;
 			ctx.stroke();
 		}
@@ -270,7 +294,7 @@ function drawSlice(
 	ctx.fillText("L", w - 16, cy + 4);
 }
 
-export const SliceViewer = ({ overlays }: SliceViewerProps) => {
+export const SliceViewer = ({ overlays, overlayColors }: SliceViewerProps) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [slice, setSlice] = useState(78);
@@ -280,8 +304,23 @@ export const SliceViewer = ({ overlays }: SliceViewerProps) => {
 		if (!canvas) return;
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
-		drawSlice(ctx, canvas.width, canvas.height, slice, TOTAL_SLICES, overlays);
-	}, [slice, overlays]);
+
+		const colors = overlayColors || {
+			wt: "#eab308",
+			tc: "#ef4444",
+			et: "#3b82f6",
+		};
+
+		drawSlice(
+			ctx,
+			canvas.width,
+			canvas.height,
+			slice,
+			TOTAL_SLICES,
+			overlays,
+			colors,
+		);
+	}, [slice, overlays, overlayColors]);
 
 	useEffect(() => {
 		render();

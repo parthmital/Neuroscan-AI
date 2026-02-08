@@ -3,16 +3,6 @@ import { AppConfig } from "./types";
 export const APP_CONFIG: AppConfig = {
 	appName: "NeuroScan AI",
 	appSubtitle: "Medical Imaging",
-	user: {
-		name: "Dr. Rebecca Torres",
-		firstName: "Rebecca",
-		lastName: "Torres",
-		email: "r.torres@hospital.org",
-		title: "Neuroradiology",
-		department: "Neuroradiology",
-		institution: "Central Medical Centre",
-		initials: "RT",
-	},
 	navItems: [
 		{ to: "/", icon: "LayoutDashboard", label: "Dashboard" },
 		{ to: "/upload", icon: "Upload", label: "Upload Scan" },

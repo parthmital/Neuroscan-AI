@@ -10,9 +10,7 @@ export const ProcessingQueue = () => {
 	const { data: config, isLoading: configLoading } = useConfig();
 
 	if (scansLoading || configLoading || !scans || !config) {
-		return (
-			<div className="bg-card rounded-xl border border-border p-6 h-48 animate-pulse" />
-		);
+		return <div className="bg-card rounded-xl border border-border p-6 h-48" />;
 	}
 
 	const queuedScans = (scans as MRIScan[]).filter(
@@ -24,7 +22,7 @@ export const ProcessingQueue = () => {
 
 	if (queuedScans.length === 0) {
 		return (
-			<div className="bg-card rounded-xl border border-border p-6 animate-fade-in">
+			<div className="bg-card rounded-xl border border-border p-6">
 				<h2 className="text-sm font-semibold text-foreground mb-4">
 					{(config as AppConfig).processingQueue.title}
 				</h2>
@@ -39,7 +37,7 @@ export const ProcessingQueue = () => {
 	}
 
 	return (
-		<div className="bg-card rounded-xl border border-border p-6 animate-fade-in">
+		<div className="bg-card rounded-xl border border-border p-6">
 			<div className="flex items-center justify-between mb-4">
 				<h2 className="text-sm font-semibold text-foreground">
 					{(config as AppConfig).processingQueue.title}
@@ -54,7 +52,7 @@ export const ProcessingQueue = () => {
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-2">
 								{scan.status === "processing" ? (
-									<Loader2 className="w-3.5 h-3.5 text-medical animate-spin" />
+									<Loader2 className="w-3.5 h-3.5 text-medical" />
 								) : (
 									<Clock className="w-3.5 h-3.5 text-info" />
 								)}

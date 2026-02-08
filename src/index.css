@@ -150,24 +150,6 @@
 		);
 	}
 
-	.card-shine {
-		position: relative;
-		overflow: hidden;
-	}
-
-	.card-shine::after {
-		content: "";
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(
-			135deg,
-			transparent 40%,
-			hsl(var(--medical) / 0.03) 50%,
-			transparent 60%
-		);
-		pointer-events: none;
-	}
-
 	.scan-overlay-wt {
 		background-color: hsl(50 100% 50% / 0.4);
 	}
@@ -178,5 +160,10 @@
 
 	.scan-overlay-et {
 		background-color: hsl(220 100% 60% / 0.6);
+	}
+
+	* {
+		animation: none !important;
+		transition: none !important;
 	}
 }

@@ -20,21 +20,19 @@ export const RecentScans = () => {
 	const { data: config, isLoading: configLoading } = useConfig();
 
 	if (scansLoading || configLoading || !scans || !config) {
-		return (
-			<div className="h-64 bg-card rounded-xl border border-border animate-pulse" />
-		);
+		return <div className="h-64 bg-card rounded-xl border border-border" />;
 	}
 
 	const statusStyles: Record<string, string> = {
 		success: "bg-success/10 text-success",
-		medical: "bg-medical-light text-medical animate-pulse-medical",
+		medical: "bg-medical-light text-medical",
 		info: "bg-info/10 text-info",
 		destructive: "bg-destructive/10 text-destructive",
 		warning: "bg-warning/10 text-warning",
 	};
 
 	return (
-		<div className="bg-card rounded-xl border border-border overflow-hidden animate-fade-in">
+		<div className="bg-card rounded-xl border border-border overflow-hidden">
 			<div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-border">
 				<h2 className="text-sm font-semibold text-foreground">
 					{(config as AppConfig).dashboard.recentScansTitle}

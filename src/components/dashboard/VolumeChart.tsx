@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
 	BarChart,
 	Bar,
@@ -14,10 +15,20 @@ import { MRIScan, AppConfig } from "@/lib/types";
 export const VolumeChart = () => {
 	const { data: scans, isLoading: scansLoading } = useScans();
 	const { data: config, isLoading: configLoading } = useConfig();
+	const [overlayColors] = useState(() => {
+		const saved = localStorage.getItem("overlayColors");
+		return saved
+			? JSON.parse(saved)
+			: {
+					wt: "#eab308",
+					tc: "#ef4444",
+					et: "#3b82f6",
+				};
+	});
 
 	if (scansLoading || configLoading || !scans || !config) {
 		return (
-			<div className="bg-card rounded-xl border border-border p-6 h-[320px] animate-pulse" />
+			<div className="bg-card rounded-xl border border-border p-6 h-[320px]" />
 		);
 	}
 
@@ -66,19 +77,19 @@ export const VolumeChart = () => {
 						<Bar
 							dataKey="wt"
 							name="Whole Tumour"
-							fill="hsl(50, 100%, 50%)"
+							fill={overlayColors.wt}
 							radius={[3, 3, 0, 0]}
 						/>
 						<Bar
 							dataKey="tc"
 							name="Tumour Core"
-							fill="hsl(0, 100%, 50%)"
+							fill={overlayColors.tc}
 							radius={[3, 3, 0, 0]}
 						/>
 						<Bar
 							dataKey="et"
 							name="Enhancing"
-							fill="hsl(220, 100%, 60%)"
+							fill={overlayColors.et}
 							radius={[3, 3, 0, 0]}
 						/>
 					</BarChart>
@@ -88,21 +99,21 @@ export const VolumeChart = () => {
 				<div className="flex items-center gap-2 text-xs text-muted-foreground">
 					<div
 						className="w-2.5 h-2.5 rounded-sm"
-						style={{ background: "hsl(50, 100%, 50%)" }}
+						style={{ background: overlayColors.wt }}
 					/>
 					WT
 				</div>
 				<div className="flex items-center gap-2 text-xs text-muted-foreground">
 					<div
 						className="w-2.5 h-2.5 rounded-sm"
-						style={{ background: "hsl(0, 100%, 50%)" }}
+						style={{ background: overlayColors.tc }}
 					/>
 					TC
 				</div>
 				<div className="flex items-center gap-2 text-xs text-muted-foreground">
 					<div
 						className="w-2.5 h-2.5 rounded-sm"
-						style={{ background: "hsl(220, 100%, 60%)" }}
+						style={{ background: overlayColors.et }}
 					/>
 					ET
 				</div>

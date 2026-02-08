@@ -29,13 +29,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		const savedToken = localStorage.getItem("token");
-		const savedUser = localStorage.getItem("user");
-		if (savedToken && savedUser) {
-			setToken(savedToken);
-			setUser(JSON.parse(savedUser));
-		}
-		setIsLoading(false);
+		const validateSession = async () => {
+			const savedToken = localStorage.getItem("token");
+			const savedUser = localStorage.getItem("user");
+
+			if (savedToken && savedUser) {
+				try {
+					const response = await fetch("http://localhost:8000/api/auth/me", {
+						headers: {
+							Authorization: `Bearer ${savedToken}`,
+						},
+					});
+
+					if (response.ok) {
+						const userData = await response.json();
+						setToken(savedToken);
+						setUser(userData);
+						localStorage.setItem("user", JSON.stringify(userData));
+					} else if (response.status === 401) {
+						// Session invalid or user deleted
+						logout();
+					} else {
+						// Other error, keep local state but don't clear
+						setToken(savedToken);
+						setUser(JSON.parse(savedUser));
+					}
+				} catch (error) {
+					console.error("Auth validation failed:", error);
+					// Network error, assume offline but keep local state
+					setToken(savedToken);
+					setUser(JSON.parse(savedUser));
+				}
+			}
+			setIsLoading(false);
+		};
+
+		validateSession();
 	}, []);
 
 	const login = (newToken: string, newUser: User) => {

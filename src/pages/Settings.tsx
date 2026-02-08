@@ -1,5 +1,14 @@
-import { useState } from "react";
-import { User, Bell, Palette, Shield, Monitor, Moon, Sun } from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+	User,
+	Bell,
+	Palette,
+	Shield,
+	Monitor,
+	Moon,
+	Sun,
+	Save,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -7,11 +16,36 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { useConfig } from "@/hooks/use-config";
 import { useAuth } from "@/components/auth/AuthContext";
+import { toast } from "@/components/ui/use-toast";
 
 const Settings = () => {
 	const { data: config, isLoading: configLoading } = useConfig();
-	const { user } = useAuth();
-	const [darkMode, setDarkMode] = useState(false);
+	const { user, token, login } = useAuth();
+
+	const [formData, setFormData] = useState({
+		firstName: "",
+		lastName: "",
+		email: "",
+		title: "",
+		department: "",
+		institution: "",
+	});
+
+	const [darkMode, setDarkMode] = useState(() => {
+		return localStorage.getItem("theme") === "dark";
+	});
+
+	const [overlayColors, setOverlayColors] = useState(() => {
+		const saved = localStorage.getItem("overlayColors");
+		return saved
+			? JSON.parse(saved)
+			: {
+					wt: "#eab308",
+					tc: "#ef4444",
+					et: "#3b82f6",
+				};
+	});
+
 	const [notifications, setNotifications] = useState({
 		scanComplete: true,
 		scanFailed: true,
@@ -19,18 +53,74 @@ const Settings = () => {
 		systemUpdates: true,
 	});
 
+	useEffect(() => {
+		if (user) {
+			setFormData({
+				firstName: user.fullName.split(" ")[0] || "",
+				lastName: user.fullName.split(" ").slice(1).join(" ") || "",
+				email: user.email || "",
+				title: user.title || "",
+				department: user.department || "",
+				institution: user.institution || "",
+			});
+		}
+	}, [user]);
+
+	useEffect(() => {
+		document.documentElement.classList.toggle("dark", darkMode);
+		localStorage.setItem("theme", darkMode ? "dark" : "light");
+	}, [darkMode]);
+
+	useEffect(() => {
+		localStorage.setItem("overlayColors", JSON.stringify(overlayColors));
+	}, [overlayColors]);
+
 	if (configLoading || !config || !user) {
 		return (
-			<div className="space-y-6 max-w-3xl animate-pulse">
+			<div className="space-y-6 max-w-3xl">
 				<div className="h-20 bg-muted rounded-xl w-1/3" />
 				<div className="h-64 bg-muted rounded-xl" />
 			</div>
 		);
 	}
 
-	const toggleDarkMode = (enabled: boolean) => {
-		setDarkMode(enabled);
-		document.documentElement.classList.toggle("dark", enabled);
+	const handleSaveChanges = async () => {
+		try {
+			const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+			const response = await fetch("http://localhost:8000/api/auth/me", {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({
+					fullName,
+					email: formData.email,
+					title: formData.title,
+					department: formData.department,
+					institution: formData.institution,
+				}),
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json();
+				throw new Error(errorData.detail || "Failed to update profile");
+			}
+
+			const updatedUser = await response.json();
+			login(token!, updatedUser);
+
+			toast({
+				title: "Settings Saved",
+				description: "Your profile has been updated successfully.",
+			});
+		} catch (error: any) {
+			toast({
+				title: "Update Failed",
+				description: error.message || "There was an error saving your changes.",
+				variant: "destructive",
+			});
+		}
 	};
 
 	return (
@@ -77,7 +167,13 @@ const Settings = () => {
 										First Name
 									</label>
 									<Input
-										defaultValue={user.fullName.split(" ")[0]}
+										value={formData.firstName}
+										onChange={(e) =>
+											setFormData((prev) => ({
+												...prev,
+												firstName: e.target.value,
+											}))
+										}
 										className="h-9 text-sm"
 									/>
 								</div>
@@ -86,7 +182,13 @@ const Settings = () => {
 										Last Name
 									</label>
 									<Input
-										defaultValue={user.fullName.split(" ").slice(1).join(" ")}
+										value={formData.lastName}
+										onChange={(e) =>
+											setFormData((prev) => ({
+												...prev,
+												lastName: e.target.value,
+											}))
+										}
 										className="h-9 text-sm"
 									/>
 								</div>
@@ -94,14 +196,45 @@ const Settings = () => {
 									<label className="text-xs font-medium text-muted-foreground">
 										Email
 									</label>
-									<Input defaultValue={user.email} className="h-9 text-sm" />
+									<Input
+										value={formData.email}
+										onChange={(e) =>
+											setFormData((prev) => ({
+												...prev,
+												email: e.target.value,
+											}))
+										}
+										className="h-9 text-sm"
+									/>
+								</div>
+								<div className="space-y-2">
+									<label className="text-xs font-medium text-muted-foreground">
+										Professional Title
+									</label>
+									<Input
+										value={formData.title}
+										onChange={(e) =>
+											setFormData((prev) => ({
+												...prev,
+												title: e.target.value,
+											}))
+										}
+										className="h-9 text-sm"
+										placeholder="e.g. Chief Neuroradiologist"
+									/>
 								</div>
 								<div className="space-y-2">
 									<label className="text-xs font-medium text-muted-foreground">
 										Department
 									</label>
 									<Input
-										defaultValue={user.department}
+										value={formData.department}
+										onChange={(e) =>
+											setFormData((prev) => ({
+												...prev,
+												department: e.target.value,
+											}))
+										}
 										className="h-9 text-sm"
 									/>
 								</div>
@@ -110,7 +243,13 @@ const Settings = () => {
 										Institution
 									</label>
 									<Input
-										defaultValue={user.institution}
+										value={formData.institution}
+										onChange={(e) =>
+											setFormData((prev) => ({
+												...prev,
+												institution: e.target.value,
+											}))
+										}
 										className="h-9 text-sm"
 									/>
 								</div>
@@ -118,7 +257,11 @@ const Settings = () => {
 						</div>
 
 						<div className="flex justify-end pt-2 border-t border-border">
-							<Button className="bg-medical text-medical-foreground hover:bg-medical/90 text-xs gap-1.5">
+							<Button
+								onClick={handleSaveChanges}
+								className="bg-medical text-medical-foreground hover:bg-medical/90 text-xs gap-1.5"
+							>
+								<Save className="w-3.5 h-3.5" />
 								Save Changes
 							</Button>
 						</div>
@@ -137,9 +280,9 @@ const Settings = () => {
 							</p>
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 								<button
-									onClick={() => toggleDarkMode(false)}
+									onClick={() => setDarkMode(false)}
 									className={cn(
-										"flex items-center gap-3 p-4 rounded-lg border-2 transition-all",
+										"flex items-center gap-3 p-4 rounded-lg border-2",
 										!darkMode
 											? "border-medical bg-medical/5"
 											: "border-border hover:border-muted-foreground/30",
@@ -154,9 +297,9 @@ const Settings = () => {
 									</div>
 								</button>
 								<button
-									onClick={() => toggleDarkMode(true)}
+									onClick={() => setDarkMode(true)}
 									className={cn(
-										"flex items-center gap-3 p-4 rounded-lg border-2 transition-all",
+										"flex items-center gap-3 p-4 rounded-lg border-2",
 										darkMode
 											? "border-medical bg-medical/5"
 											: "border-border hover:border-muted-foreground/30",
@@ -182,27 +325,43 @@ const Settings = () => {
 							</p>
 							<div className="space-y-3">
 								{[
-									{ label: "Whole Tumour (WT)", color: "hsl(50, 100%, 50%)" },
-									{ label: "Tumour Core (TC)", color: "hsl(0, 100%, 50%)" },
 									{
+										id: "wt",
+										label: "Whole Tumour (WT)",
+										color: overlayColors.wt,
+									},
+									{
+										id: "tc",
+										label: "Tumour Core (TC)",
+										color: overlayColors.tc,
+									},
+									{
+										id: "et",
 										label: "Enhancing Tumour (ET)",
-										color: "hsl(220, 100%, 60%)",
+										color: overlayColors.et,
 									},
 								].map((item) => (
 									<div
-										key={item.label}
+										key={item.id}
 										className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border"
 									>
-										<div
-											className="w-4 h-4 rounded-sm shrink-0"
-											style={{ backgroundColor: item.color }}
+										<input
+											type="color"
+											value={item.color}
+											onChange={(e) =>
+												setOverlayColors((prev) => ({
+													...prev,
+													[item.id]: e.target.value,
+												}))
+											}
+											className="w-8 h-8 rounded shrink-0 cursor-pointer bg-transparent border-none"
 										/>
 										<span className="text-sm text-foreground flex-1">
 											{item.label}
 										</span>
 										<Input
-											defaultValue={item.color}
-											className="h-7 w-40 text-xs font-mono hidden sm:block"
+											value={item.color}
+											className="h-7 w-24 text-xs font-mono hidden sm:block uppercase"
 											readOnly
 										/>
 									</div>
