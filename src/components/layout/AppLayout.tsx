@@ -1,0 +1,94 @@
+import { Outlet, useNavigate } from "react-router-dom";
+import { AppSidebar } from "./AppSidebar";
+import { MobileNav } from "./MobileNav";
+import { useAuth } from "../auth/AuthContext";
+import { LogOut, Settings, Bell, Search } from "lucide-react";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { useConfig } from "@/hooks/use-config";
+
+export const AppLayout = () => {
+	const { data: config } = useConfig();
+	const { user, logout } = useAuth();
+	const navigate = useNavigate();
+
+	return (
+		<div className="min-h-screen bg-background">
+			{/* Desktop sidebar */}
+			<div className="hidden lg:block">
+				<AppSidebar />
+			</div>
+
+			<div className="lg:pl-[260px] transition-all duration-300">
+				{/* Top bar */}
+				<header className="sticky top-0 z-30 h-14 sm:h-16 bg-background/80 backdrop-blur-md border-b border-border flex items-center justify-between px-4 sm:px-8">
+					<div className="flex items-center gap-3">
+						<MobileNav />
+						<div className="relative w-48 sm:w-80">
+							<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+							<Input
+								placeholder={config?.dashboard.searchPlaceholder || "Search..."}
+								className="pl-9 h-9 bg-muted/50 border-none text-sm"
+							/>
+						</div>
+					</div>
+					<div className="flex items-center gap-3">
+						<button className="relative p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+							<Bell className="w-4.5 h-4.5" />
+							<span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-destructive" />
+						</button>
+						<div className="h-8 w-[1px] bg-border mx-1 hidden sm:block" />
+						<div className="flex items-center gap-3 pl-1">
+							<div className="hidden sm:flex flex-col items-end">
+								<span className="text-sm font-medium leading-none">
+									{user?.fullName}
+								</span>
+								<span className="text-[10px] text-muted-foreground uppercase tracking-tight">
+									{user?.title || "Physician"}
+								</span>
+							</div>
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<button className="w-9 h-9 rounded-full bg-medical/10 border border-medical/20 flex items-center justify-center text-medical font-bold hover:bg-medical/20 transition-all">
+										{user?.fullName
+											.split(" ")
+											.map((n) => n[0])
+											.join("")}
+									</button>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent align="end" className="w-56">
+									<DropdownMenuLabel>My Account</DropdownMenuLabel>
+									<DropdownMenuSeparator />
+									<DropdownMenuItem onClick={() => navigate("/settings")}>
+										<Settings className="mr-2 h-4 w-4" />
+										<span>Settings</span>
+									</DropdownMenuItem>
+									<DropdownMenuSeparator />
+									<DropdownMenuItem
+										onClick={logout}
+										className="text-destructive focus:text-destructive"
+									>
+										<LogOut className="mr-2 h-4 w-4" />
+										<span>Log out</span>
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+						</div>
+					</div>
+				</header>
+
+				{/* Main content */}
+				<main className="p-4 sm:p-6 lg:p-8">
+					<Outlet />
+				</main>
+			</div>
+		</div>
+	);
+};
