@@ -24,10 +24,6 @@ export const APP_CONFIG: AppConfig = {
 		noScansFound: "No scans found",
 		adjustFilters: "Try adjusting your search or filters.",
 	},
-	processingQueue: {
-		title: "Processing Queue",
-		noScans: "No scans in queue",
-	},
 	volumeChart: {
 		title: "Tumour Volume Distribution",
 		subtitle: "Segmentation volumes (cm³) across flagged scans",
@@ -64,12 +60,5 @@ export const APP_CONFIG: AppConfig = {
 		notAvailable: "Report not available",
 		processingRequired:
 			"Processing must complete before a report can be generated.",
-	},
-	statusConfig: {
-		completed: { label: "Completed", color: "success" },
-		processing: { label: "Processing", color: "medical" },
-		queued: { label: "Queued", color: "info" },
-		failed: { label: "Failed", color: "destructive" },
-		uploading: { label: "Uploading", color: "warning" },
 	},
 };

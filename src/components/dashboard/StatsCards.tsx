@@ -31,12 +31,12 @@ export const StatsCards = () => {
 				{ label: "Total Scans", value: scans.length, type: "total" },
 				{
 					label: "Processing",
-					value: scans.filter((s) => s.status === "processing").length,
+					value: 0,
 					type: "processing",
 				},
 				{
 					label: "Completed",
-					value: scans.filter((s) => s.status === "completed").length,
+					value: scans.length,
 					type: "completed",
 				},
 				{

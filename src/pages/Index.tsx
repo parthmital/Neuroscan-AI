@@ -1,6 +1,5 @@
 import { StatsCards } from "@/components/dashboard/StatsCards";
 import { RecentScans } from "@/components/dashboard/RecentScans";
-import { ProcessingQueue } from "@/components/dashboard/ProcessingQueue";
 import { VolumeChart } from "@/components/dashboard/VolumeChart";
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
@@ -60,7 +59,6 @@ const Index = () => {
 					<RecentScans />
 				</div>
 				<div className="space-y-6">
-					<ProcessingQueue />
 					<VolumeChart />
 				</div>
 			</div>

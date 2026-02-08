@@ -30,10 +30,10 @@ export const AppLayout = () => {
 
 			<div className="lg:pl-[260px]">
 				{/* Top bar */}
-				<header className="sticky top-0 z-30 h-14 sm:h-16 bg-background/80 backdrop-blur-md border-b border-border flex items-center justify-between px-4 sm:px-8">
-					<div className="flex items-center gap-3">
+				<header className="sticky top-0 z-30 h-14 sm:h-16 bg-background/80 backdrop-blur-md border-b border-border flex items-center px-4 sm:px-8">
+					<div className="flex items-center gap-4 sm:gap-8 flex-1 mr-4 sm:mr-8">
 						<MobileNav />
-						<div className="relative w-48 sm:w-80">
+						<div className="relative flex-1">
 							<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
 							<Input
 								placeholder={config?.dashboard.searchPlaceholder || "Search..."}
@@ -51,24 +51,7 @@ export const AppLayout = () => {
 						</div>
 					</div>
 					<div className="flex items-center gap-3">
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<button className="relative p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted">
-									<Bell className="w-4.5 h-4.5" />
-									<span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-destructive" />
-								</button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end" className="w-80">
-								<DropdownMenuLabel>Notifications</DropdownMenuLabel>
-								<DropdownMenuSeparator />
-								<div className="p-4 text-center">
-									<p className="text-sm text-muted-foreground">
-										No new notifications
-									</p>
-								</div>
-							</DropdownMenuContent>
-						</DropdownMenu>
-						<div className="h-8 w-[1px] bg-border mx-1 hidden sm:block" />
+						<div className="h-8 w-[1px] bg-border hidden sm:block" />
 						<div className="flex items-center gap-3 pl-1">
 							<div className="hidden sm:flex flex-col items-end">
 								<span className="text-sm font-medium leading-none">

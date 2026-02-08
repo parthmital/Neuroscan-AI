@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { Eye, RotateCcw, MoreHorizontal } from "lucide-react";
+import { Eye, RotateCcw, MoreHorizontal, Trash2, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useScans } from "@/hooks/use-data";
 import { useConfig } from "@/hooks/use-config";
 import { MRIScan, AppConfig } from "@/lib/types";
@@ -13,23 +15,56 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import { useState } from "react";
 
 export const RecentScans = () => {
 	const navigate = useNavigate();
 	const { data: scans, isLoading: scansLoading } = useScans();
 	const { data: config, isLoading: configLoading } = useConfig();
+	const [editingScan, setEditingScan] = useState<MRIScan | null>(null);
+	const [editForm, setEditForm] = useState({ patientName: "", patientId: "" });
+
+	const handleEditClick = (scan: MRIScan) => {
+		setEditingScan(scan);
+		setEditForm({ patientName: scan.patientName, patientId: scan.patientId });
+	};
+
+	const handleSaveScan = async () => {
+		if (!editingScan) return;
+		try {
+			const token = localStorage.getItem("token");
+			await fetch(`http://localhost:8000/api/scans/${editingScan.id}`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(editForm),
+			});
+			setEditingScan(null);
+			window.location.reload();
+		} catch (error) {
+			console.error("Failed to update scan", error);
+		}
+	};
 
 	if (scansLoading || configLoading || !scans || !config) {
 		return <div className="h-64 bg-card rounded-xl border border-border" />;
 	}
-
-	const statusStyles: Record<string, string> = {
-		success: "bg-success/10 text-success",
-		medical: "bg-medical-light text-medical",
-		info: "bg-info/10 text-info",
-		destructive: "bg-destructive/10 text-destructive",
-		warning: "bg-warning/10 text-warning",
-	};
 
 	return (
 		<div className="bg-card rounded-xl border border-border overflow-hidden">
@@ -50,13 +85,10 @@ export const RecentScans = () => {
 			{/* Mobile card view */}
 			<div className="sm:hidden divide-y divide-border">
 				{(scans as MRIScan[]).slice(0, 6).map((scan) => {
-					const statusInfo = (config as AppConfig).statusConfig[
-						scan.status
-					] || { label: scan.status, color: "muted" };
 					return (
 						<div
 							key={scan.id}
-							className="p-4 cursor-pointer hover:bg-muted/30 transition-colors"
+							className="px-4 sm:px-6 py-4 cursor-pointer hover:bg-muted/30 transition-colors"
 							onClick={() => navigate(`/scan/${scan.id}`)}
 						>
 							<div className="flex items-start justify-between mb-2">
@@ -68,15 +100,6 @@ export const RecentScans = () => {
 										{scan.patientId}
 									</p>
 								</div>
-								<span
-									className={cn(
-										"inline-flex items-center px-2 py-0.5 text-[10px] font-semibold rounded-full",
-										statusStyles[statusInfo.color] ||
-											"bg-muted text-muted-foreground",
-									)}
-								>
-									{statusInfo.label}
-								</span>
 							</div>
 							<div className="flex items-center gap-2 text-xs text-muted-foreground">
 								<span>{scan.scanDate}</span>
@@ -89,6 +112,60 @@ export const RecentScans = () => {
 										: "Pending"}
 								</span>
 							</div>
+							<div className="flex gap-2 mt-3">
+								<Button
+									variant="ghost"
+									size="sm"
+									className="text-xs text-muted-foreground"
+									onClick={(e) => {
+										e.stopPropagation();
+										navigate(`/scan/${scan.id}`);
+									}}
+								>
+									<Eye className="w-3.5 h-3.5 mr-1" />
+									View
+								</Button>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="text-xs text-muted-foreground"
+									onClick={(e) => {
+										e.stopPropagation();
+										handleEditClick(scan);
+									}}
+								>
+									<Pencil className="w-3.5 h-3.5 mr-1" />
+									Edit
+								</Button>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="text-xs text-destructive hover:text-destructive"
+									onClick={async (e) => {
+										e.stopPropagation();
+										if (confirm("Are you sure you want to delete this scan?")) {
+											try {
+												const token = localStorage.getItem("token");
+												await fetch(
+													`http://localhost:8000/api/scans/${scan.id}`,
+													{
+														method: "DELETE",
+														headers: {
+															Authorization: `Bearer ${token}`,
+														},
+													},
+												);
+												window.location.reload(); // Simple reload to refresh data
+											} catch (err) {
+												console.error("Failed to delete", err);
+											}
+										}
+									}}
+								>
+									<Trash2 className="w-3.5 h-3.5 mr-1" />
+									Delete
+								</Button>
+							</div>
 						</div>
 					);
 				})}
@@ -99,36 +176,30 @@ export const RecentScans = () => {
 				<Table>
 					<TableHeader>
 						<TableRow className="hover:bg-transparent">
-							<TableHead className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
 								Patient
 							</TableHead>
-							<TableHead className="text-xs font-semibold tracking-wider uppercase text-muted-foreground hidden md:table-cell">
+							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground hidden md:table-cell">
 								Date
 							</TableHead>
-							<TableHead className="text-xs font-semibold tracking-wider uppercase text-muted-foreground hidden lg:table-cell">
+							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground hidden lg:table-cell">
 								Modalities
 							</TableHead>
-							<TableHead className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
-								Status
-							</TableHead>
-							<TableHead className="text-xs font-semibold tracking-wider uppercase text-muted-foreground hidden md:table-cell">
+							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground hidden md:table-cell">
 								Result
 							</TableHead>
-							<TableHead className="w-[80px]" />
+							<TableHead className="px-4 sm:px-6 py-4 w-[80px]" />
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{(scans as MRIScan[]).slice(0, 6).map((scan) => {
-							const statusInfo = (config as AppConfig).statusConfig[
-								scan.status
-							] || { label: scan.status, color: "muted" };
 							return (
 								<TableRow
 									key={scan.id}
 									className="cursor-pointer group"
 									onClick={() => navigate(`/scan/${scan.id}`)}
 								>
-									<TableCell>
+									<TableCell className="px-4 sm:px-6 py-4">
 										<div>
 											<p className="text-sm font-medium text-foreground">
 												{scan.patientName}
@@ -138,10 +209,10 @@ export const RecentScans = () => {
 											</p>
 										</div>
 									</TableCell>
-									<TableCell className="text-sm text-muted-foreground hidden md:table-cell">
+									<TableCell className="px-4 sm:px-6 py-4 text-sm text-muted-foreground hidden md:table-cell">
 										{scan.scanDate}
 									</TableCell>
-									<TableCell className="hidden lg:table-cell">
+									<TableCell className="px-4 sm:px-6 py-4 hidden lg:table-cell">
 										<div className="flex gap-1">
 											{scan.modalities.map((m: string) => (
 												<span
@@ -153,18 +224,7 @@ export const RecentScans = () => {
 											))}
 										</div>
 									</TableCell>
-									<TableCell>
-										<span
-											className={cn(
-												"inline-flex items-center px-2.5 py-1 text-[11px] font-semibold rounded-full",
-												statusStyles[statusInfo.color] ||
-													"bg-muted text-muted-foreground",
-											)}
-										>
-											{statusInfo.label}
-										</span>
-									</TableCell>
-									<TableCell className="hidden md:table-cell">
+									<TableCell className="px-4 sm:px-6 py-4">
 										<span className="text-sm text-muted-foreground">
 											{scan.results
 												? scan.results.detected
@@ -173,20 +233,64 @@ export const RecentScans = () => {
 												: "—"}
 										</span>
 									</TableCell>
-									<TableCell>
-										<div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-											<button className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
-												<Eye className="w-3.5 h-3.5" />
-											</button>
-											{scan.status === "failed" && (
+									<TableCell className="px-4 sm:px-6 py-4">
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
 												<button className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
-													<RotateCcw className="w-3.5 h-3.5" />
+													<MoreHorizontal className="w-3.5 h-3.5" />
 												</button>
-											)}
-											<button className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
-												<MoreHorizontal className="w-3.5 h-3.5" />
-											</button>
-										</div>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent align="end">
+												<DropdownMenuItem
+													onClick={(e) => {
+														e.stopPropagation();
+														navigate(`/scan/${scan.id}`);
+													}}
+												>
+													<Eye className="w-3.5 h-3.5 mr-2" />
+													View Details
+												</DropdownMenuItem>
+												<DropdownMenuItem
+													onClick={(e) => {
+														e.stopPropagation();
+														handleEditClick(scan);
+													}}
+												>
+													<Pencil className="w-3.5 h-3.5 mr-2" />
+													Edit Details
+												</DropdownMenuItem>
+												<DropdownMenuItem
+													className="text-destructive focus:text-destructive"
+													onClick={async (e) => {
+														e.stopPropagation();
+														if (
+															confirm(
+																"Are you sure you want to delete this scan?",
+															)
+														) {
+															try {
+																const token = localStorage.getItem("token");
+																await fetch(
+																	`http://localhost:8000/api/scans/${scan.id}`,
+																	{
+																		method: "DELETE",
+																		headers: {
+																			Authorization: `Bearer ${token}`,
+																		},
+																	},
+																);
+																window.location.reload(); // Simple reload to refresh data
+															} catch (err) {
+																console.error("Failed to delete", err);
+															}
+														}
+													}}
+												>
+													<Trash2 className="w-3.5 h-3.5 mr-2" />
+													Delete Scan
+												</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
 									</TableCell>
 								</TableRow>
 							);
@@ -194,6 +298,50 @@ export const RecentScans = () => {
 					</TableBody>
 				</Table>
 			</div>
+
+			<Dialog
+				open={!!editingScan}
+				onOpenChange={(open) => !open && setEditingScan(null)}
+			>
+				<DialogContent onClick={(e) => e.stopPropagation()}>
+					<DialogHeader>
+						<DialogTitle>Edit Scan Details</DialogTitle>
+						<DialogDescription>
+							Update patient information for this scan.
+						</DialogDescription>
+					</DialogHeader>
+					<div className="space-y-4 py-2">
+						<div className="space-y-2">
+							<Label htmlFor="patientName">Patient Name</Label>
+							<Input
+								id="patientName"
+								value={editForm.patientName}
+								onChange={(e) =>
+									setEditForm({ ...editForm, patientName: e.target.value })
+								}
+							/>
+						</div>
+						<div className="space-y-2">
+							<Label htmlFor="patientId">Patient ID</Label>
+							<Input
+								id="patientId"
+								value={editForm.patientId}
+								onChange={(e) =>
+									setEditForm({ ...editForm, patientId: e.target.value })
+								}
+							/>
+						</div>
+					</div>
+					<DialogFooter>
+						<Button variant="outline" onClick={() => setEditingScan(null)}>
+							Cancel
+						</Button>
+						<Button onClick={handleSaveScan} className="bg-medical text-white">
+							Save Changes
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 };

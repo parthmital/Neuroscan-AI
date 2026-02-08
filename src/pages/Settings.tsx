@@ -1,14 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-	User,
-	Bell,
-	Palette,
-	Shield,
-	Monitor,
-	Moon,
-	Sun,
-	Save,
-} from "lucide-react";
+import { User, Palette, Shield, Monitor, Moon, Sun, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -44,13 +35,6 @@ const Settings = () => {
 					tc: "#ef4444",
 					et: "#3b82f6",
 				};
-	});
-
-	const [notifications, setNotifications] = useState({
-		scanComplete: true,
-		scanFailed: true,
-		weeklyReport: false,
-		systemUpdates: true,
 	});
 
 	useEffect(() => {
@@ -114,17 +98,21 @@ const Settings = () => {
 				title: "Settings Saved",
 				description: "Your profile has been updated successfully.",
 			});
-		} catch (error: any) {
+		} catch (error: unknown) {
+			const message =
+				error instanceof Error
+					? error.message
+					: "There was an error saving your changes.";
 			toast({
 				title: "Update Failed",
-				description: error.message || "There was an error saving your changes.",
+				description: message,
 				variant: "destructive",
 			});
 		}
 	};
 
 	return (
-		<div className="space-y-6 max-w-3xl">
+		<div className="space-y-6 w-full">
 			<div>
 				<h1 className="text-2xl font-bold text-foreground tracking-tight">
 					Settings
@@ -143,10 +131,6 @@ const Settings = () => {
 					<TabsTrigger value="appearance" className="gap-1.5 text-xs">
 						<Palette className="w-3.5 h-3.5" />
 						<span className="hidden sm:inline">Appearance</span>
-					</TabsTrigger>
-					<TabsTrigger value="notifications" className="gap-1.5 text-xs">
-						<Bell className="w-3.5 h-3.5" />
-						<span className="hidden sm:inline">Notifications</span>
 					</TabsTrigger>
 					<TabsTrigger value="security" className="gap-1.5 text-xs">
 						<Shield className="w-3.5 h-3.5" />
@@ -371,71 +355,6 @@ const Settings = () => {
 					</div>
 				</TabsContent>
 
-				{/* Notifications */}
-				<TabsContent value="notifications">
-					<div className="bg-card rounded-xl border border-border p-5 sm:p-6 space-y-6">
-						<div>
-							<h2 className="text-sm font-semibold text-foreground mb-1">
-								Email Notifications
-							</h2>
-							<p className="text-xs text-muted-foreground mb-4">
-								Configure when you receive email alerts.
-							</p>
-							<div className="space-y-3">
-								{[
-									{
-										key: "scanComplete",
-										label: "Scan Processing Complete",
-										description: "Notify when a scan finishes AI analysis",
-									},
-									{
-										key: "scanFailed",
-										label: "Scan Processing Failed",
-										description: "Alert when a scan fails during processing",
-									},
-									{
-										key: "weeklyReport",
-										label: "Weekly Summary Report",
-										description: "Receive a weekly digest of scan activity",
-									},
-									{
-										key: "systemUpdates",
-										label: "System Updates",
-										description:
-											"Notifications about platform updates and maintenance",
-									},
-								].map((item) => (
-									<div
-										key={item.key}
-										className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border"
-									>
-										<div className="flex-1 min-w-0">
-											<p className="text-sm font-medium text-foreground">
-												{item.label}
-											</p>
-											<p className="text-xs text-muted-foreground">
-												{item.description}
-											</p>
-										</div>
-										<Switch
-											checked={
-												notifications[item.key as keyof typeof notifications]
-											}
-											onCheckedChange={(checked) =>
-												setNotifications((prev) => ({
-													...prev,
-													[item.key]: checked,
-												}))
-											}
-											className="shrink-0"
-										/>
-									</div>
-								))}
-							</div>
-						</div>
-					</div>
-				</TabsContent>
-
 				{/* Security */}
 				<TabsContent value="security">
 					<div className="bg-card rounded-xl border border-border p-5 sm:p-6 space-y-6">
@@ -446,7 +365,7 @@ const Settings = () => {
 							<p className="text-xs text-muted-foreground mb-4">
 								Update your account password.
 							</p>
-							<div className="space-y-3 max-w-sm">
+							<div className="space-y-3">
 								<div className="space-y-2">
 									<label className="text-xs font-medium text-muted-foreground">
 										Current Password

@@ -11,7 +11,7 @@ const Upload = () => {
 
 	if (isLoading || !config) {
 		return (
-			<div className="max-w-3xl mx-auto space-y-6 animate-pulse">
+			<div className="space-y-6 animate-pulse">
 				<div className="h-10 bg-muted rounded-xl w-24" />
 				<div className="h-20 bg-muted rounded-xl w-3/4" />
 			</div>
@@ -19,7 +19,7 @@ const Upload = () => {
 	}
 
 	return (
-		<div className="max-w-3xl mx-auto space-y-6">
+		<div className="space-y-6">
 			<div className="flex items-center gap-4">
 				<Button
 					variant="ghost"

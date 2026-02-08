@@ -123,18 +123,6 @@ export const AppSidebar = () => {
 					)}
 				</div>
 			</div>
-
-			{/* Collapse toggle */}
-			<button
-				onClick={() => setCollapsed(!collapsed)}
-				className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-card border border-border shadow-sm flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-			>
-				{collapsed ? (
-					<Icons.ChevronRight className="w-3 h-3" />
-				) : (
-					<Icons.ChevronLeft className="w-3 h-3" />
-				)}
-			</button>
 		</aside>
 	);
 };

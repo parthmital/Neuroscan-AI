@@ -1,10 +1,3 @@
-export type ScanStatus =
-	| "uploading"
-	| "queued"
-	| "processing"
-	| "completed"
-	| "failed";
-
 export type Modality = "FLAIR" | "T1" | "T1CE" | "T2";
 
 export interface ScanResult {
@@ -23,7 +16,6 @@ export interface MRIScan {
 	patientName: string;
 	scanDate: string;
 	modalities: Modality[];
-	status: ScanStatus;
 	progress: number;
 	pipelineStep: string;
 	results?: ScanResult;
@@ -50,10 +42,6 @@ export interface AppConfig {
 		searchPlaceholder: string;
 		noScansFound: string;
 		adjustFilters: string;
-	};
-	processingQueue: {
-		title: string;
-		noScans: string;
 	};
 	volumeChart: {
 		title: string;
@@ -89,7 +77,6 @@ export interface AppConfig {
 		notAvailable: string;
 		processingRequired: string;
 	};
-	statusConfig: Record<string, { label: string; color: string }>;
 }
 
 export interface AppStat {

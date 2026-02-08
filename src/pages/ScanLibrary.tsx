@@ -1,12 +1,35 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, Eye } from "lucide-react";
+import { Search, Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useScans } from "@/hooks/use-data";
 import { useConfig } from "@/hooks/use-config";
 import { MRIScan, AppConfig } from "@/lib/types";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
 
 const ScanLibrary = () => {
 	const navigate = useNavigate();
@@ -14,8 +37,34 @@ const ScanLibrary = () => {
 	const querySearch = new URLSearchParams(location.search).get("search") || "";
 	const [search, setSearch] = useState(querySearch);
 	const [filter, setFilter] = useState<string>("all");
+	const [editingScan, setEditingScan] = useState<MRIScan | null>(null);
+	const [editForm, setEditForm] = useState({ patientName: "", patientId: "" });
 	const { data: scans, isLoading: scansLoading } = useScans();
 	const { data: config, isLoading: configLoading } = useConfig();
+
+	const handleEditClick = (scan: MRIScan) => {
+		setEditingScan(scan);
+		setEditForm({ patientName: scan.patientName, patientId: scan.patientId });
+	};
+
+	const handleSaveScan = async () => {
+		if (!editingScan) return;
+		try {
+			const token = localStorage.getItem("token");
+			await fetch(`http://localhost:8000/api/scans/${editingScan.id}`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(editForm),
+			});
+			setEditingScan(null);
+			window.location.reload();
+		} catch (error) {
+			console.error("Failed to update scan", error);
+		}
+	};
 
 	useEffect(() => {
 		setSearch(querySearch);
@@ -34,23 +83,13 @@ const ScanLibrary = () => {
 		);
 	}
 
-	const filtered = scans.filter((s: MRIScan) => {
+	// Filter scans based on search
+	const filtered = (scans || []).filter((s) => {
 		const matchesSearch =
 			s.patientName.toLowerCase().includes(search.toLowerCase()) ||
 			s.patientId.toLowerCase().includes(search.toLowerCase());
-		const matchesFilter = filter === "all" || s.status === filter;
-		return matchesSearch && matchesFilter;
+		return matchesSearch;
 	});
-
-	const filters = ["all", ...Object.keys(config.statusConfig)];
-
-	const statusStyles: Record<string, string> = {
-		success: "bg-success/10 text-success",
-		medical: "bg-medical-light text-medical",
-		info: "bg-info/10 text-info",
-		destructive: "bg-destructive/10 text-destructive",
-		warning: "bg-warning/10 text-warning",
-	};
 
 	return (
 		<div className="space-y-6">
@@ -63,7 +102,7 @@ const ScanLibrary = () => {
 				</p>
 			</div>
 
-			{/* Filters */}
+			{/* Search */}
 			<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
 				<div className="relative w-full sm:w-72">
 					<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -74,35 +113,11 @@ const ScanLibrary = () => {
 						className="pl-9 h-9 bg-muted/50 border-none text-sm"
 					/>
 				</div>
-				<div className="flex gap-1.5 flex-wrap">
-					{filters.map((f) => {
-						const label =
-							f === "all" ? "All" : config.statusConfig[f]?.label || f;
-						return (
-							<button
-								key={f}
-								onClick={() => setFilter(f)}
-								className={cn(
-									"px-3 py-1.5 rounded-lg text-xs font-medium transition-colors capitalize",
-									filter === f
-										? "bg-medical text-medical-foreground"
-										: "bg-muted text-muted-foreground hover:text-foreground",
-								)}
-							>
-								{label}
-							</button>
-						);
-					})}
-				</div>
 			</div>
 
-			{/* Grid */}
-			<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+			{/* Mobile card view */}
+			<div className="sm:hidden grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
 				{filtered.map((scan: MRIScan) => {
-					const statusInfo = config.statusConfig[scan.status] || {
-						label: scan.status,
-						color: "muted",
-					};
 					return (
 						<div
 							key={scan.id}
@@ -118,15 +133,6 @@ const ScanLibrary = () => {
 										{scan.patientId}
 									</p>
 								</div>
-								<span
-									className={cn(
-										"inline-flex items-center px-2 py-0.5 text-[10px] font-semibold rounded-full",
-										statusStyles[statusInfo.color] ||
-											"bg-muted text-muted-foreground",
-									)}
-								>
-									{statusInfo.label}
-								</span>
 							</div>
 
 							<div className="flex items-center gap-2 mb-3">
@@ -153,19 +159,244 @@ const ScanLibrary = () => {
 								</div>
 							)}
 
-							<div className="flex justify-end mt-3">
+							<div className="flex gap-2 mt-3">
 								<Button
 									variant="ghost"
 									size="sm"
-									className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+									className="text-xs text-muted-foreground"
+									onClick={(e) => {
+										e.stopPropagation();
+										navigate(`/scan/${scan.id}`);
+									}}
 								>
 									<Eye className="w-3.5 h-3.5 mr-1" />
 									View
+								</Button>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="text-xs text-muted-foreground"
+									onClick={(e) => {
+										e.stopPropagation();
+										handleEditClick(scan);
+									}}
+								>
+									<Pencil className="w-3.5 h-3.5 mr-1" />
+									Edit
+								</Button>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="text-xs text-destructive hover:text-destructive"
+									onClick={async (e) => {
+										e.stopPropagation();
+										if (confirm("Are you sure you want to delete this scan?")) {
+											try {
+												const token = localStorage.getItem("token");
+												await fetch(
+													`http://localhost:8000/api/scans/${scan.id}`,
+													{
+														method: "DELETE",
+														headers: {
+															Authorization: `Bearer ${token}`,
+														},
+													},
+												);
+												window.location.reload(); // Simple reload to refresh data
+											} catch (err) {
+												console.error("Failed to delete", err);
+											}
+										}
+									}}
+								>
+									<Trash2 className="w-3.5 h-3.5 mr-1" />
+									Delete
 								</Button>
 							</div>
 						</div>
 					);
 				})}
+			</div>
+
+			<Dialog
+				open={!!editingScan}
+				onOpenChange={(open) => !open && setEditingScan(null)}
+			>
+				<DialogContent onClick={(e) => e.stopPropagation()}>
+					<DialogHeader>
+						<DialogTitle>Edit Scan Details</DialogTitle>
+						<DialogDescription>
+							Update patient information for this scan.
+						</DialogDescription>
+					</DialogHeader>
+					<div className="space-y-4 py-2">
+						<div className="space-y-2">
+							<Label htmlFor="patientName">Patient Name</Label>
+							<Input
+								id="patientName"
+								value={editForm.patientName}
+								onChange={(e) =>
+									setEditForm({ ...editForm, patientName: e.target.value })
+								}
+							/>
+						</div>
+						<div className="space-y-2">
+							<Label htmlFor="patientId">Patient ID</Label>
+							<Input
+								id="patientId"
+								value={editForm.patientId}
+								onChange={(e) =>
+									setEditForm({ ...editForm, patientId: e.target.value })
+								}
+							/>
+						</div>
+					</div>
+					<DialogFooter>
+						<Button variant="outline" onClick={() => setEditingScan(null)}>
+							Cancel
+						</Button>
+						<Button onClick={handleSaveScan} className="bg-medical text-white">
+							Save Changes
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+
+			{/* Desktop table view */}
+			<div className="hidden sm:block overflow-x-auto">
+				<Table>
+					<TableHeader>
+						<TableRow className="hover:bg-transparent">
+							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+								Patient
+							</TableHead>
+							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+								Modalities
+							</TableHead>
+							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+								Date
+							</TableHead>
+							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+								Result
+							</TableHead>
+							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+								View
+							</TableHead>
+							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+								Edit
+							</TableHead>
+							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+								Delete
+							</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{filtered.map((scan: MRIScan) => {
+							return (
+								<TableRow
+									key={scan.id}
+									className="cursor-pointer group hover:bg-muted/50"
+									onClick={() => navigate(`/scan/${scan.id}`)}
+								>
+									<TableCell className="px-4 sm:px-6 py-4">
+										<div>
+											<p className="text-sm font-medium text-foreground">
+												{scan.patientName}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												{scan.patientId}
+											</p>
+										</div>
+									</TableCell>
+									<TableCell className="px-4 sm:px-6 py-4">
+										<div className="flex gap-1">
+											{scan.modalities.map((m) => (
+												<span
+													key={m}
+													className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-muted text-muted-foreground"
+												>
+													{m}
+												</span>
+											))}
+										</div>
+									</TableCell>
+									<TableCell className="px-4 sm:px-6 py-4 text-sm text-muted-foreground">
+										{scan.scanDate}
+									</TableCell>
+									<TableCell className="px-4 sm:px-6 py-4">
+										<span className="text-sm text-muted-foreground">
+											{scan.results
+												? scan.results.detected
+													? scan.results.classification
+													: "No Tumour"
+												: "—"}
+										</span>
+									</TableCell>
+									<TableCell className="px-4 sm:px-6 py-4">
+										<Button
+											variant="ghost"
+											size="sm"
+											className="text-xs text-muted-foreground"
+											onClick={(e) => {
+												e.stopPropagation();
+												navigate(`/scan/${scan.id}`);
+											}}
+										>
+											<Eye className="w-3.5 h-3.5 mr-1" />
+											View
+										</Button>
+									</TableCell>
+									<TableCell className="px-4 sm:px-6 py-4">
+										<Button
+											variant="ghost"
+											size="sm"
+											className="text-xs text-muted-foreground"
+											onClick={(e) => {
+												e.stopPropagation();
+												handleEditClick(scan);
+											}}
+										>
+											<Pencil className="w-3.5 h-3.5 mr-1" />
+											Edit
+										</Button>
+									</TableCell>
+									<TableCell className="px-4 sm:px-6 py-4">
+										<Button
+											variant="ghost"
+											size="sm"
+											className="text-xs text-destructive hover:text-destructive"
+											onClick={async (e) => {
+												e.stopPropagation();
+												if (
+													confirm("Are you sure you want to delete this scan?")
+												) {
+													try {
+														const token = localStorage.getItem("token");
+														await fetch(
+															`http://localhost:8000/api/scans/${scan.id}`,
+															{
+																method: "DELETE",
+																headers: {
+																	Authorization: `Bearer ${token}`,
+																},
+															},
+														);
+														window.location.reload(); // Simple reload to refresh data
+													} catch (err) {
+														console.error("Failed to delete", err);
+													}
+												}
+											}}
+										>
+											<Trash2 className="w-3.5 h-3.5 mr-1" />
+											Delete
+										</Button>
+									</TableCell>
+								</TableRow>
+							);
+						})}
+					</TableBody>
+				</Table>
 			</div>
 
 			{filtered.length === 0 && (

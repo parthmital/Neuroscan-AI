@@ -64,19 +64,6 @@ const ScanDetail = () => {
 		);
 	}
 
-	const statusStyles: Record<string, string> = {
-		success: "bg-success/10 text-success",
-		medical: "bg-medical-light text-medical",
-		info: "bg-info/10 text-info",
-		destructive: "bg-destructive/10 text-destructive",
-		warning: "bg-warning/10 text-warning",
-	};
-
-	const statusInfo = (config as AppConfig).statusConfig[scan.status] || {
-		label: scan.status,
-		color: "muted",
-	};
-
 	return (
 		<div className="space-y-6">
 			{/* Header */}
@@ -98,15 +85,6 @@ const ScanDetail = () => {
 						<h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
 							{scan.patientName}
 						</h1>
-						<span
-							className={cn(
-								"inline-flex items-center px-2.5 py-1 text-[11px] font-semibold rounded-full",
-								statusStyles[statusInfo.color] ||
-									"bg-muted text-muted-foreground",
-							)}
-						>
-							{statusInfo.label}
-						</span>
 					</div>
 					<div className="flex items-center gap-2 sm:gap-4 text-sm text-muted-foreground flex-wrap">
 						<span>{scan.patientId}</span>
@@ -127,13 +105,7 @@ const ScanDetail = () => {
 				</div>
 
 				<div className="flex gap-2 self-start">
-					{scan.status === "failed" && (
-						<Button variant="outline" size="sm" className="gap-1.5 text-xs">
-							<RotateCcw className="w-3.5 h-3.5" />
-							{(config as AppConfig).scanDetail.retryButton}
-						</Button>
-					)}
-					{scan.status === "completed" && (
+					{scan.results && (
 						<>
 							<Button variant="outline" size="sm" className="gap-1.5 text-xs">
 								<Download className="w-3.5 h-3.5" />
@@ -165,7 +137,12 @@ const ScanDetail = () => {
 				<TabsContent value="viewer" className="space-y-0">
 					<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 						<div className="lg:col-span-2">
-							<SliceViewer overlays={overlays} overlayColors={overlayColors} />
+							<SliceViewer
+								scanId={scan.id}
+								modalities={scan.modalities}
+								overlays={overlays}
+								overlayColors={overlayColors}
+							/>
 						</div>
 						<div className="space-y-6">
 							<SegmentationControls
@@ -228,7 +205,7 @@ const ScanDetail = () => {
 				</TabsContent>
 
 				<TabsContent value="report">
-					{scan.status === "completed" && scan.results ? (
+					{scan.results ? (
 						<div className="max-w-2xl bg-card rounded-xl border border-border p-4 sm:p-8 space-y-6">
 							<div className="border-b border-border pb-4">
 								<h2 className="text-lg font-bold text-foreground">

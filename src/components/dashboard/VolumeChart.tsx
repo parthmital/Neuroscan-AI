@@ -51,7 +51,11 @@ export const VolumeChart = () => {
 			</p>
 			<div className="h-[220px]">
 				<ResponsiveContainer width="100%" height="100%">
-					<BarChart data={chartData} barGap={2}>
+					<BarChart
+						data={chartData}
+						barGap={2}
+						margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+					>
 						<CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
 						<XAxis
 							dataKey="name"
