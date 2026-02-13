@@ -19,6 +19,7 @@ import {
 	UserPlus,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/components/auth/AuthContext";
 
 const Register = () => {
 	const [formData, setFormData] = useState({
@@ -31,6 +32,7 @@ const Register = () => {
 		institution: "",
 	});
 	const [isLoading, setIsLoading] = useState(false);
+	const { login } = useAuth();
 	const navigate = useNavigate();
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,8 +57,11 @@ const Register = () => {
 				throw new Error(error.detail || "Registration failed");
 			}
 
-			toast.success("Account created successfully! You can now log in.");
-			navigate("/login");
+			const data = await response.json();
+			login(data.access_token, data.user);
+
+			toast.success("Account created successfully!");
+			navigate("/");
 		} catch (error: any) {
 			toast.error(error.message);
 		} finally {

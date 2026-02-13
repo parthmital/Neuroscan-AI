@@ -82,18 +82,18 @@ const ScanDetail = () => {
 				</Button>
 			</div>
 
-			<div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+			<div className="flex items-start justify-between gap-4">
 				<div>
-					<div className="flex items-center gap-3 mb-1 flex-wrap">
-						<h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+					<div className="flex items-center gap-3 mb-1">
+						<h1 className="text-2xl font-bold text-foreground tracking-tight">
 							{scan.patientName}
 						</h1>
 					</div>
-					<div className="flex items-center gap-2 sm:gap-4 text-sm text-muted-foreground flex-wrap">
+					<div className="flex items-center gap-4 text-sm text-muted-foreground">
 						<span>{scan.patientId}</span>
-						<span className="hidden sm:inline">·</span>
+						<span>·</span>
 						<span>{scan.scanDate}</span>
-						<span className="hidden sm:inline">·</span>
+						<span>·</span>
 						<div className="flex gap-1">
 							{scan.modalities.map((m) => (
 								<span
@@ -107,7 +107,7 @@ const ScanDetail = () => {
 					</div>
 				</div>
 
-				<div className="flex gap-2 self-start">
+				<div className="flex gap-2 shrink-0">
 					{scan.results && (
 						<>
 							<Button variant="outline" size="sm" className="gap-1.5 text-xs">
@@ -125,21 +125,21 @@ const ScanDetail = () => {
 
 			{/* Main content */}
 			<Tabs defaultValue="viewer" className="space-y-6">
-				<TabsList className="bg-muted/50 w-full sm:w-auto">
-					<TabsTrigger value="viewer" className="flex-1 sm:flex-none">
+				<TabsList className="bg-muted/50">
+					<TabsTrigger value="viewer">
 						{(config as AppConfig).scanDetail.viewerTab}
 					</TabsTrigger>
-					<TabsTrigger value="pipeline" className="flex-1 sm:flex-none">
+					<TabsTrigger value="pipeline">
 						{(config as AppConfig).scanDetail.pipelineTab}
 					</TabsTrigger>
-					<TabsTrigger value="report" className="flex-1 sm:flex-none">
+					<TabsTrigger value="report">
 						{(config as AppConfig).scanDetail.reportTab}
 					</TabsTrigger>
 				</TabsList>
 
 				<TabsContent value="viewer" className="space-y-0">
-					<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-						<div className="lg:col-span-2">
+					<div className="grid grid-cols-3 gap-6">
+						<div className="col-span-2">
 							<div className="flex justify-between items-center mb-4">
 								<h2 className="text-sm font-semibold text-foreground">
 									Scan Visualisation
@@ -182,6 +182,8 @@ const ScanDetail = () => {
 									<QuadViewer
 										scanId={scan.id}
 										modality={scan.modalities[0]?.toLowerCase() || "flair"}
+										overlays={overlays}
+										overlayColors={overlayColors}
 									/>
 								</div>
 							)}
@@ -248,7 +250,7 @@ const ScanDetail = () => {
 
 				<TabsContent value="report">
 					{scan.results ? (
-						<div className="max-w-2xl bg-card rounded-xl border border-border p-4 sm:p-8 space-y-6">
+						<div className="max-w-2xl bg-card rounded-xl border border-border p-8 space-y-6">
 							<div className="border-b border-border pb-4">
 								<h2 className="text-lg font-bold text-foreground">
 									{(config as AppConfig).scanDetail.reportTitle}
@@ -258,7 +260,7 @@ const ScanDetail = () => {
 								</p>
 							</div>
 
-							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+							<div className="grid grid-cols-2 gap-4 text-sm">
 								<div>
 									<p className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">
 										Patient

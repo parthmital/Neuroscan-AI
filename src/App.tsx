@@ -24,15 +24,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 	const { isAuthenticated, isLoading } = useAuth();
 	const location = useLocation();
 
-	useEffect(() => {
-		const theme = localStorage.getItem("theme");
-		if (theme === "dark") {
-			document.documentElement.classList.add("dark");
-		} else {
-			document.documentElement.classList.remove("dark");
-		}
-	}, []);
-
 	if (isLoading) {
 		return (
 			<div className="h-screen w-screen flex items-center justify-center bg-black">
@@ -55,41 +46,56 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 import { Loader2 } from "lucide-react";
 
-const App = () => (
-	<QueryClientProvider client={queryClient}>
-		<TooltipProvider>
-			<AuthProvider>
-				<Toaster />
-				<Sonner />
-				<BrowserRouter
-					future={{
-						v7_startTransition: true,
-						v7_relativeSplatPath: true,
-					}}
-				>
-					<Routes>
-						<Route path="/login" element={<Login />} />
-						<Route path="/register" element={<Register />} />
-						<Route
-							element={
-								<ProtectedRoute>
-									<AppLayout />
-								</ProtectedRoute>
-							}
-						>
-							<Route path="/" element={<Index />} />
-							<Route path="/upload" element={<Upload />} />
-							<Route path="/scan/:id" element={<ScanDetail />} />
-							<Route path="/scans" element={<ScanLibrary />} />
-							<Route path="/reports" element={<Reports />} />
-							<Route path="/settings" element={<Settings />} />
-						</Route>
-						<Route path="*" element={<NotFound />} />
-					</Routes>
-				</BrowserRouter>
-			</AuthProvider>
-		</TooltipProvider>
-	</QueryClientProvider>
-);
+const App = () => {
+	useEffect(() => {
+		const theme = localStorage.getItem("theme");
+		if (
+			theme === "dark" ||
+			(!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+		) {
+			document.documentElement.classList.add("dark");
+			if (!theme) localStorage.setItem("theme", "dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+		}
+	}, []);
+
+	return (
+		<QueryClientProvider client={queryClient}>
+			<TooltipProvider>
+				<AuthProvider>
+					<Toaster />
+					<Sonner />
+					<BrowserRouter
+						future={{
+							v7_startTransition: true,
+							v7_relativeSplatPath: true,
+						}}
+					>
+						<Routes>
+							<Route path="/login" element={<Login />} />
+							<Route path="/register" element={<Register />} />
+							<Route
+								element={
+									<ProtectedRoute>
+										<AppLayout />
+									</ProtectedRoute>
+								}
+							>
+								<Route path="/" element={<Index />} />
+								<Route path="/upload" element={<Upload />} />
+								<Route path="/scan/:id" element={<ScanDetail />} />
+								<Route path="/scans" element={<ScanLibrary />} />
+								<Route path="/reports" element={<Reports />} />
+								<Route path="/settings" element={<Settings />} />
+							</Route>
+							<Route path="*" element={<NotFound />} />
+						</Routes>
+					</BrowserRouter>
+				</AuthProvider>
+			</TooltipProvider>
+		</QueryClientProvider>
+	);
+};
 
 export default App;

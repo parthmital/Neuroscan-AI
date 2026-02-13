@@ -34,9 +34,34 @@ const initializeCornerstone = async () => {
 interface QuadViewerProps {
 	scanId: string;
 	modality?: string;
+	overlays?: {
+		wt: boolean;
+		tc: boolean;
+		et: boolean;
+		opacity: number;
+	};
+	overlayColors?: {
+		wt: string;
+		tc: string;
+		et: string;
+	};
 }
 
-export const QuadViewer = ({ scanId, modality = "flair" }: QuadViewerProps) => {
+// Helper to parse hex to 0-255 array
+const getRgbArray = (hex: string): [number, number, number, number] => {
+	const bigint = parseInt(hex.slice(1), 16);
+	const r = (bigint >> 16) & 255;
+	const g = (bigint >> 8) & 255;
+	const b = bigint & 255;
+	return [r, g, b, 255]; // Alpha will be overridden by opacity
+};
+
+export const QuadViewer = ({
+	scanId,
+	modality = "flair",
+	overlays,
+	overlayColors,
+}: QuadViewerProps) => {
 	const axialRef = useRef<HTMLDivElement>(null);
 	const sagittalRef = useRef<HTMLDivElement>(null);
 	const coronalRef = useRef<HTMLDivElement>(null);
@@ -45,6 +70,172 @@ export const QuadViewer = ({ scanId, modality = "flair" }: QuadViewerProps) => {
 	const renderingEngineId = useRef("quadViewEngine");
 	const [isReady, setIsReady] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [segLoaded, setSegLoaded] = useState(false);
+
+	// Effect to update segmentation Visibility/Opacity/Colors when controls change
+	useEffect(() => {
+		// Only run if segmentation is successfully loaded and we have overlays props
+		if (!segLoaded || !overlays || !overlayColors) return;
+
+		const updateAppearance = () => {
+			const segmentationId = `SEG-${scanId}`;
+			const toolGroupIds = [
+				`QuadToolGroup-${scanId}-2D`,
+				`QuadToolGroup-${scanId}-3D`,
+			];
+
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const colorConfig = (cornerstoneTools.segmentation as any).config.color;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const visibilityConfig = (cornerstoneTools.segmentation as any).config
+				.visibility;
+
+			// Define colors
+			const wtColor = getRgbArray(overlayColors.wt);
+			const tcColor = getRgbArray(overlayColors.tc);
+			const etColor = getRgbArray(overlayColors.et);
+
+			// Update opacity for all
+			const opacity = Math.round(overlays.opacity * 255);
+
+			// Base colors from props
+			const baseWtColor = getRgbArray(overlayColors.wt);
+			const baseTcColor = getRgbArray(overlayColors.tc);
+			const baseEtColor = getRgbArray(overlayColors.et);
+
+			// Logic to mimic SliceViewer hierarchy:
+			// Label 1 = Edema (Visible if WT is ON). Color = WT
+			const l1_visible = overlays.wt;
+			// Clone to avoid mutation issues
+			const l1_color = [...baseWtColor];
+			l1_color[3] = l1_visible ? opacity : 0;
+
+			// Label 2 = Core (Visible if TC is ON, OR if WT is ON)
+			// Color: If TC on -> TC color. Else -> WT color.
+			const l2_visible = overlays.tc || overlays.wt;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const l2_color: any = overlays.tc ? [...baseTcColor] : [...baseWtColor];
+			l2_color[3] = l2_visible ? opacity : 0;
+
+			// Label 3 = Enhancing (Visible if ET is ON, OR TC is ON, OR WT is ON)
+			// Color: ET > TC > WT
+			const l3_visible = overlays.et || overlays.tc || overlays.wt;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const l3_color: any = overlays.et
+				? [...baseEtColor]
+				: overlays.tc
+					? [...baseTcColor]
+					: [...baseWtColor];
+			l3_color[3] = l3_visible ? opacity : 0;
+
+			const segments = [
+				{ index: 1, visible: l1_visible, color: l1_color },
+				{ index: 2, visible: l2_visible, color: l2_color },
+				{ index: 3, visible: l3_visible, color: l3_color },
+			];
+
+			const renderingEngine = cornerstone.getRenderingEngine(
+				renderingEngineId.current,
+			);
+
+			toolGroupIds.forEach((tgId) => {
+				const toolGroup = cornerstoneTools.ToolGroupManager.getToolGroup(tgId);
+				if (!toolGroup) return;
+
+				// Update global segmentation representation config usage
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				const segConfig = (cornerstoneTools.segmentation as any).config;
+				let segRepConfig = null;
+
+				if (segConfig.getSegmentationRepresentationSpecificConfig) {
+					segRepConfig = segConfig.getSegmentationRepresentationSpecificConfig(
+						tgId,
+						{ segmentationId },
+					);
+				}
+
+				// If no specific config exists yet, create one based on defaults
+				if (!segRepConfig) {
+					segRepConfig = {
+						renderFill: true,
+						renderOutline: true,
+						renderInactiveSegmentations: true,
+						representations: {
+							Labelmap: {
+								renderFill: true,
+								renderOutline: true,
+								outlineWidthActive: 2,
+								outlineWidthInactive: 2,
+								fillAlpha: overlays.opacity,
+								outlineOpacity: overlays.opacity,
+							},
+						},
+					};
+				}
+
+				if (segRepConfig) {
+					// Update the properties directly on the object as well for safety
+					segRepConfig.renderFill = true;
+					segRepConfig.renderOutline = true;
+					segRepConfig.outlineWidthActive = 2;
+					segRepConfig.outlineWidthInactive = 2;
+					segRepConfig.fillAlpha = overlays.opacity;
+					segRepConfig.outlineOpacity = overlays.opacity; // Sync outline opacity
+
+					if (segConfig.setSegmentationRepresentationSpecificConfig) {
+						segConfig.setSegmentationRepresentationSpecificConfig(
+							tgId,
+							{ segmentationId },
+							segRepConfig,
+						);
+					}
+				}
+
+				const viewportIds = toolGroup.getViewportIds();
+				viewportIds.forEach((vpId) => {
+					// Set visibility per segment
+					segments.forEach((seg) => {
+						try {
+							// Set visibility
+							visibilityConfig.setSegmentIndexVisibility(
+								vpId,
+								segmentationId,
+								seg.index,
+								seg.visible,
+							);
+							// Set Color (including opacity)
+							colorConfig.setSegmentIndexColor(
+								vpId,
+								segmentationId,
+								seg.index,
+								seg.color,
+							);
+						} catch (e) {
+							// ignore
+						}
+					});
+				});
+			});
+
+			// Specific fix for 3D Volume Viewport
+			const viewport3D = renderingEngine?.getViewport("VOLUME_3D");
+			if (viewport3D) {
+				viewport3D.render();
+			}
+
+			if (renderingEngine) {
+				renderingEngine.render();
+				// Delayed render to ensure 3D volume updates catch up
+				setTimeout(() => {
+					const vp3D = renderingEngine.getViewport("VOLUME_3D");
+					if (vp3D) vp3D.render();
+					renderingEngine.render();
+				}, 50);
+			}
+		};
+
+		updateAppearance();
+	}, [overlays, overlayColors, segLoaded, scanId]);
 
 	useEffect(() => {
 		initializeCornerstone().then(() => setIsReady(true));
@@ -72,6 +263,7 @@ export const QuadViewer = ({ scanId, modality = "flair" }: QuadViewerProps) => {
 
 		const loadVolumes = async () => {
 			setIsLoading(true);
+			setSegLoaded(false);
 			try {
 				const renderingEngine = new cornerstone.RenderingEngine(engineId);
 
@@ -218,7 +410,9 @@ export const QuadViewer = ({ scanId, modality = "flair" }: QuadViewerProps) => {
 				);
 
 				// Configure 3D volume rendering
-				const viewport3D = renderingEngine.getViewport("VOLUME_3D") as any;
+				const viewport3D = renderingEngine.getViewport(
+					"VOLUME_3D",
+				) as cornerstone.Types.IVolumeViewport;
 				if (viewport3D && viewport3D.setProperties) {
 					// Get the volume actor
 					const volumeActor = viewport3D.getDefaultActor();
@@ -226,7 +420,8 @@ export const QuadViewer = ({ scanId, modality = "flair" }: QuadViewerProps) => {
 						const volumeActorEntry = volumeActor.actor;
 
 						// Set up volume rendering properties
-						const property = volumeActorEntry.getProperty();
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
+						const property = volumeActorEntry.getProperty() as any;
 
 						// Enable shading for better 3D appearance
 						property.setShade(true);
@@ -268,7 +463,8 @@ export const QuadViewer = ({ scanId, modality = "flair" }: QuadViewerProps) => {
 				// Load and display segmentation if available
 				try {
 					const segUrl = `http://localhost:8000/api/scans/${scanId}/download/segmentation?token=${token}`;
-					const segVolumeId = `cornerstoneStreamingImageVolume:seg_${scanId}`;
+					const segVolumeId = `nifti:seg_${scanId}`;
+					const segmentationId = `SEG-${scanId}`;
 
 					console.log("Loading segmentation from:", segUrl);
 
@@ -288,10 +484,29 @@ export const QuadViewer = ({ scanId, modality = "flair" }: QuadViewerProps) => {
 					await segVolume.load();
 					console.log("Segmentation volume loaded");
 
+					// FORCE FRAME OF REFERENCE MATCH
+					// This is critical if the processed NIfTI lost its original FrameOfReferenceUID
+					// or if the loader generated a new one.
+					const mainVolume = cornerstone.cache.getVolume(volumeId);
+					if (mainVolume && segVolume) {
+						const mainFoR = mainVolume.metadata.FrameOfReferenceUID;
+						const segFoR = segVolume.metadata.FrameOfReferenceUID;
+
+						console.log(`Main Volume FoR: ${mainFoR}`);
+						console.log(`Segmentation FoR: ${segFoR}`);
+
+						if (mainFoR && segFoR && mainFoR !== segFoR) {
+							console.warn(
+								"Frame of Reference mismatch! Forcing segmentation to match main volume.",
+							);
+							segVolume.metadata.FrameOfReferenceUID = mainFoR;
+						}
+					}
+
 					// Add segmentation to Cornerstone
 					await cornerstoneTools.segmentation.addSegmentations([
 						{
-							segmentationId: segVolumeId,
+							segmentationId: segmentationId,
 							representation: {
 								type: cornerstoneTools.Enums.SegmentationRepresentations
 									.Labelmap,
@@ -302,41 +517,83 @@ export const QuadViewer = ({ scanId, modality = "flair" }: QuadViewerProps) => {
 						},
 					]);
 
-					console.log("Segmentation added to state");
+					console.log("Segmentation added to state with ID:", segmentationId);
 
-					// Add segmentation representations to 2D viewports via toolgroup
-					const segRepresentationUID2D =
+					// Add segmentation to 2D viewports
+					const viewports2D = toolGroup2D?.getViewportIds() || [];
+					for (const viewportId of viewports2D) {
 						await cornerstoneTools.segmentation.addSegmentationRepresentations(
-							toolGroup2DId,
+							viewportId,
 							[
 								{
-									segmentationId: segVolumeId,
+									segmentationId: segmentationId,
 									type: cornerstoneTools.Enums.SegmentationRepresentations
 										.Labelmap,
 								},
 							],
 						);
+					}
 
-					// Add segmentation representation to 3D viewport via toolgroup
-					const segRepresentationUID3D =
+					// Set active for 2D ToolGroup
+					cornerstoneTools.segmentation.activeSegmentation.setActiveSegmentation(
+						toolGroup2DId,
+						segmentationId,
+					);
+
+					// Add segmentation to 3D viewport
+					const viewports3D = toolGroup3D?.getViewportIds() || [];
+					for (const viewportId of viewports3D) {
 						await cornerstoneTools.segmentation.addSegmentationRepresentations(
-							toolGroup3DId,
+							viewportId,
 							[
 								{
-									segmentationId: segVolumeId,
+									segmentationId: segmentationId,
 									type: cornerstoneTools.Enums.SegmentationRepresentations
 										.Labelmap,
 								},
 							],
 						);
+					}
 
-					console.log("Segmentation representations added:", {
-						segRepresentationUID2D,
-						segRepresentationUID3D,
-					});
+					// Set active for 3D ToolGroup
+					cornerstoneTools.segmentation.activeSegmentation.setActiveSegmentation(
+						toolGroup3DId,
+						segmentationId,
+					);
 
-					renderingEngine.render();
-					console.log("Segmentation loaded and rendered successfully");
+					// Force initial 3D config to ensure visibility
+					try {
+						const initial3DConfig = {
+							renderFill: true,
+							renderOutline: true,
+							fillAlpha: 0.7,
+							outlineOpacity: 1.0,
+							representations: {
+								Labelmap: {
+									renderFill: true,
+									renderOutline: true,
+									fillAlpha: 0.7,
+									outlineOpacity: 1.0,
+								},
+							},
+						};
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
+						const segConfig = (cornerstoneTools.segmentation as any).config;
+						if (segConfig.setSegmentationRepresentationSpecificConfig) {
+							segConfig.setSegmentationRepresentationSpecificConfig(
+								toolGroup3DId,
+								{ segmentationId },
+								initial3DConfig,
+							);
+						}
+					} catch (e) {
+						console.warn("Could not set initial 3D config", e);
+					}
+
+					// Mark segmentation as loaded, which triggers the effect to apply colors/visibility
+					setSegLoaded(true);
+
+					console.log("Segmentation loading flow completed");
 				} catch (segErr) {
 					console.error("Segmentation failed to load:", segErr);
 					console.warn("Continuing without segmentation overlay");
@@ -359,7 +616,7 @@ export const QuadViewer = ({ scanId, modality = "flair" }: QuadViewerProps) => {
 				console.warn("Cleanup error", e);
 			}
 		};
-	}, [isReady, scanId, modality]);
+	}, [isReady, scanId, modality]); // Removed overlays from here to prevent full reload
 
 	return (
 		<div className="w-full h-full grid grid-cols-2 grid-rows-2 gap-1 bg-black p-1 rounded-lg relative min-h-[600px]">

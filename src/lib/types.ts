@@ -18,6 +18,7 @@ export interface MRIScan {
 	modalities: Modality[];
 	progress: number;
 	pipelineStep: string;
+	status: string;
 	results?: ScanResult;
 }
 

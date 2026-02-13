@@ -103,8 +103,8 @@ const ScanLibrary = () => {
 			</div>
 
 			{/* Search */}
-			<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-				<div className="relative w-full sm:w-72">
+			<div className="flex items-center gap-4">
+				<div className="relative w-72">
 					<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
 					<Input
 						placeholder={config.scanLibrary.searchPlaceholder}
@@ -113,109 +113,6 @@ const ScanLibrary = () => {
 						className="pl-9 h-9 bg-muted/50 border-none text-sm"
 					/>
 				</div>
-			</div>
-
-			{/* Mobile card view */}
-			<div className="sm:hidden grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-				{filtered.map((scan: MRIScan) => {
-					return (
-						<div
-							key={scan.id}
-							onClick={() => navigate(`/scan/${scan.id}`)}
-							className="bg-card rounded-xl border border-border p-5 cursor-pointer group hover:border-medical/30 hover:shadow-md transition-all"
-						>
-							<div className="flex items-start justify-between mb-3">
-								<div>
-									<p className="text-sm font-semibold text-foreground group-hover:text-medical transition-colors">
-										{scan.patientName}
-									</p>
-									<p className="text-xs text-muted-foreground">
-										{scan.patientId}
-									</p>
-								</div>
-							</div>
-
-							<div className="flex items-center gap-2 mb-3">
-								{scan.modalities.map((m) => (
-									<span
-										key={m}
-										className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-muted text-muted-foreground"
-									>
-										{m}
-									</span>
-								))}
-								<span className="text-xs text-muted-foreground ml-auto">
-									{scan.scanDate}
-								</span>
-							</div>
-
-							{scan.results && (
-								<div className="pt-3 border-t border-border">
-									<p className="text-xs text-muted-foreground">
-										{scan.results.detected
-											? `${scan.results.classification} · ${scan.results.tumorVolume} cm³`
-											: "No tumour detected"}
-									</p>
-								</div>
-							)}
-
-							<div className="flex gap-2 mt-3">
-								<Button
-									variant="ghost"
-									size="sm"
-									className="text-xs text-muted-foreground"
-									onClick={(e) => {
-										e.stopPropagation();
-										navigate(`/scan/${scan.id}`);
-									}}
-								>
-									<Eye className="w-3.5 h-3.5 mr-1" />
-									View
-								</Button>
-								<Button
-									variant="ghost"
-									size="sm"
-									className="text-xs text-muted-foreground"
-									onClick={(e) => {
-										e.stopPropagation();
-										handleEditClick(scan);
-									}}
-								>
-									<Pencil className="w-3.5 h-3.5 mr-1" />
-									Edit
-								</Button>
-								<Button
-									variant="ghost"
-									size="sm"
-									className="text-xs text-destructive hover:text-destructive"
-									onClick={async (e) => {
-										e.stopPropagation();
-										if (confirm("Are you sure you want to delete this scan?")) {
-											try {
-												const token = localStorage.getItem("token");
-												await fetch(
-													`http://localhost:8000/api/scans/${scan.id}`,
-													{
-														method: "DELETE",
-														headers: {
-															Authorization: `Bearer ${token}`,
-														},
-													},
-												);
-												window.location.reload(); // Simple reload to refresh data
-											} catch (err) {
-												console.error("Failed to delete", err);
-											}
-										}
-									}}
-								>
-									<Trash2 className="w-3.5 h-3.5 mr-1" />
-									Delete
-								</Button>
-							</div>
-						</div>
-					);
-				})}
 			</div>
 
 			<Dialog
@@ -263,29 +160,27 @@ const ScanLibrary = () => {
 			</Dialog>
 
 			{/* Desktop table view */}
-			<div className="hidden sm:block overflow-x-auto">
+			<div className="overflow-x-auto">
 				<Table>
 					<TableHeader>
 						<TableRow className="hover:bg-transparent">
-							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
 								Patient
 							</TableHead>
-							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
 								Modalities
 							</TableHead>
-							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
 								Date
 							</TableHead>
-							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
 								Result
 							</TableHead>
-							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
-								View
-							</TableHead>
-							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+
+							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
 								Edit
 							</TableHead>
-							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
 								Delete
 							</TableHead>
 						</TableRow>
@@ -298,7 +193,7 @@ const ScanLibrary = () => {
 									className="cursor-pointer group hover:bg-muted/50"
 									onClick={() => navigate(`/scan/${scan.id}`)}
 								>
-									<TableCell className="px-4 sm:px-6 py-4">
+									<TableCell className="px-6 py-4">
 										<div>
 											<p className="text-sm font-medium text-foreground">
 												{scan.patientName}
@@ -308,7 +203,7 @@ const ScanLibrary = () => {
 											</p>
 										</div>
 									</TableCell>
-									<TableCell className="px-4 sm:px-6 py-4">
+									<TableCell className="px-6 py-4">
 										<div className="flex gap-1">
 											{scan.modalities.map((m) => (
 												<span
@@ -320,10 +215,10 @@ const ScanLibrary = () => {
 											))}
 										</div>
 									</TableCell>
-									<TableCell className="px-4 sm:px-6 py-4 text-sm text-muted-foreground">
+									<TableCell className="px-6 py-4 text-sm text-muted-foreground">
 										{scan.scanDate}
 									</TableCell>
-									<TableCell className="px-4 sm:px-6 py-4">
+									<TableCell className="px-6 py-4">
 										<span className="text-sm text-muted-foreground">
 											{scan.results
 												? scan.results.detected
@@ -332,21 +227,8 @@ const ScanLibrary = () => {
 												: "—"}
 										</span>
 									</TableCell>
-									<TableCell className="px-4 sm:px-6 py-4">
-										<Button
-											variant="ghost"
-											size="sm"
-											className="text-xs text-muted-foreground"
-											onClick={(e) => {
-												e.stopPropagation();
-												navigate(`/scan/${scan.id}`);
-											}}
-										>
-											<Eye className="w-3.5 h-3.5 mr-1" />
-											View
-										</Button>
-									</TableCell>
-									<TableCell className="px-4 sm:px-6 py-4">
+
+									<TableCell className="px-6 py-4">
 										<Button
 											variant="ghost"
 											size="sm"
@@ -360,7 +242,7 @@ const ScanLibrary = () => {
 											Edit
 										</Button>
 									</TableCell>
-									<TableCell className="px-4 sm:px-6 py-4">
+									<TableCell className="px-6 py-4">
 										<Button
 											variant="ghost"
 											size="sm"

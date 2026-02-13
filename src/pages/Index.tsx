@@ -34,16 +34,16 @@ const Index = () => {
 	return (
 		<div className="space-y-8">
 			{/* Header */}
-			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+			<div className="flex items-center justify-between gap-4">
 				<div>
-					<h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+					<h1 className="text-2xl font-bold text-foreground tracking-tight">
 						Dashboard
 					</h1>
 					<p className="text-sm text-muted-foreground mt-1">{welcomeMessage}</p>
 				</div>
 				<Button
 					onClick={() => navigate("/upload")}
-					className="bg-medical text-medical-foreground hover:bg-medical/90 gap-2 self-start sm:self-auto"
+					className="bg-medical text-medical-foreground hover:bg-medical/90 gap-2"
 				>
 					<Upload className="w-4 h-4" />
 					{config.dashboard.newScanButtonLabel}
@@ -54,8 +54,8 @@ const Index = () => {
 			<StatsCards />
 
 			{/* Main grid */}
-			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-				<div className="lg:col-span-2">
+			<div className="grid grid-cols-3 gap-6">
+				<div className="col-span-2">
 					<RecentScans />
 				</div>
 				<div className="space-y-6">

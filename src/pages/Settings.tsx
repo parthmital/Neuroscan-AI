@@ -23,7 +23,11 @@ const Settings = () => {
 	});
 
 	const [darkMode, setDarkMode] = useState(() => {
-		return localStorage.getItem("theme") === "dark";
+		const theme = localStorage.getItem("theme");
+		return (
+			theme === "dark" ||
+			(!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+		);
 	});
 
 	const [overlayColors, setOverlayColors] = useState(() => {
@@ -123,29 +127,29 @@ const Settings = () => {
 			</div>
 
 			<Tabs defaultValue="profile" className="space-y-6">
-				<TabsList className="bg-muted/50 flex-wrap h-auto gap-1 p-1">
+				<TabsList className="bg-muted/50 gap-1 p-1">
 					<TabsTrigger value="profile" className="gap-1.5 text-xs">
 						<User className="w-3.5 h-3.5" />
-						<span className="hidden sm:inline">Profile</span>
+						Profile
 					</TabsTrigger>
 					<TabsTrigger value="appearance" className="gap-1.5 text-xs">
 						<Palette className="w-3.5 h-3.5" />
-						<span className="hidden sm:inline">Appearance</span>
+						Appearance
 					</TabsTrigger>
 					<TabsTrigger value="security" className="gap-1.5 text-xs">
 						<Shield className="w-3.5 h-3.5" />
-						<span className="hidden sm:inline">Security</span>
+						Security
 					</TabsTrigger>
 				</TabsList>
 
 				{/* Profile */}
 				<TabsContent value="profile">
-					<div className="bg-card rounded-xl border border-border p-5 sm:p-6 space-y-6">
+					<div className="bg-card rounded-xl border border-border p-6 space-y-6">
 						<div>
 							<h2 className="text-sm font-semibold text-foreground mb-4">
 								Profile Information
 							</h2>
-							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+							<div className="grid grid-cols-2 gap-4">
 								<div className="space-y-2">
 									<label className="text-xs font-medium text-muted-foreground">
 										First Name
@@ -222,7 +226,7 @@ const Settings = () => {
 										className="h-9 text-sm"
 									/>
 								</div>
-								<div className="space-y-2 sm:col-span-2">
+								<div className="space-y-2 col-span-2">
 									<label className="text-xs font-medium text-muted-foreground">
 										Institution
 									</label>
@@ -254,7 +258,7 @@ const Settings = () => {
 
 				{/* Appearance */}
 				<TabsContent value="appearance">
-					<div className="bg-card rounded-xl border border-border p-5 sm:p-6 space-y-6">
+					<div className="bg-card rounded-xl border border-border p-6 space-y-6">
 						<div>
 							<h2 className="text-sm font-semibold text-foreground mb-1">
 								Theme
@@ -262,7 +266,7 @@ const Settings = () => {
 							<p className="text-xs text-muted-foreground mb-4">
 								Customise the application appearance.
 							</p>
-							<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+							<div className="grid grid-cols-2 gap-3">
 								<button
 									onClick={() => setDarkMode(false)}
 									className={cn(
@@ -345,7 +349,7 @@ const Settings = () => {
 										</span>
 										<Input
 											value={item.color}
-											className="h-7 w-24 text-xs font-mono hidden sm:block uppercase"
+											className="h-7 w-24 text-xs font-mono uppercase"
 											readOnly
 										/>
 									</div>
@@ -357,7 +361,7 @@ const Settings = () => {
 
 				{/* Security */}
 				<TabsContent value="security">
-					<div className="bg-card rounded-xl border border-border p-5 sm:p-6 space-y-6">
+					<div className="bg-card rounded-xl border border-border p-6 space-y-6">
 						<div>
 							<h2 className="text-sm font-semibold text-foreground mb-1">
 								Change Password

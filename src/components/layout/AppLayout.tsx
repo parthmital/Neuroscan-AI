@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { AppSidebar } from "./AppSidebar";
-import { MobileNav } from "./MobileNav";
 import { useAuth } from "../auth/AuthContext";
 import { LogOut, Settings, Bell, Search } from "lucide-react";
 import {
@@ -22,17 +21,16 @@ export const AppLayout = () => {
 	const [searchQuery, setSearchQuery] = useState("");
 
 	return (
-		<div className="min-h-screen bg-background">
-			{/* Desktop sidebar */}
-			<div className="hidden lg:block">
+		<div className="flex min-h-screen bg-background">
+			{/* Sidebar */}
+			<div className="w-[260px] flex-shrink-0 border-r border-border">
 				<AppSidebar />
 			</div>
 
-			<div className="lg:pl-[260px]">
+			<div className="flex-1 flex flex-col min-w-0">
 				{/* Top bar */}
-				<header className="sticky top-0 z-30 h-14 sm:h-16 bg-background/80 backdrop-blur-md border-b border-border flex items-center px-4 sm:px-8">
-					<div className="flex items-center gap-4 sm:gap-8 flex-1 mr-4 sm:mr-8">
-						<MobileNav />
+				<header className="sticky top-0 z-30 h-16 bg-background/80 backdrop-blur-md border-b border-border flex items-center px-8">
+					<div className="flex items-center gap-8 flex-1 mr-8">
 						<div className="relative flex-1">
 							<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
 							<Input
@@ -51,9 +49,9 @@ export const AppLayout = () => {
 						</div>
 					</div>
 					<div className="flex items-center gap-3">
-						<div className="h-8 w-[1px] bg-border hidden sm:block" />
+						<div className="h-8 w-[1px] bg-border" />
 						<div className="flex items-center gap-3 pl-1">
-							<div className="hidden sm:flex flex-col items-end">
+							<div className="flex flex-col items-end">
 								<span className="text-sm font-medium leading-none">
 									{user?.fullName}
 								</span>
@@ -92,7 +90,7 @@ export const AppLayout = () => {
 				</header>
 
 				{/* Main content */}
-				<main className="p-4 sm:p-6 lg:p-8">
+				<main className="p-8">
 					<Outlet />
 				</main>
 			</div>

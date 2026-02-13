@@ -37,7 +37,7 @@ const Reports = () => {
 
 	return (
 		<div className="space-y-6">
-			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+			<div className="flex items-center justify-between gap-4">
 				<div>
 					<h1 className="text-2xl font-bold text-foreground tracking-tight">
 						{(config as AppConfig).reports.title}
@@ -46,11 +46,7 @@ const Reports = () => {
 						{(config as AppConfig).reports.subtitle}
 					</p>
 				</div>
-				<Button
-					variant="outline"
-					size="sm"
-					className="gap-1.5 text-xs self-start sm:self-auto"
-				>
+				<Button variant="outline" size="sm" className="gap-1.5 text-xs">
 					<Download className="w-3.5 h-3.5" />
 					{(config as AppConfig).reports.exportAll}
 				</Button>
@@ -58,7 +54,7 @@ const Reports = () => {
 
 			{/* Filters */}
 			<div className="flex items-center gap-4 flex-wrap">
-				<div className="relative w-full sm:w-72">
+				<div className="relative w-72">
 					<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
 					<Input
 						placeholder={(config as AppConfig).reports.searchPlaceholder}
@@ -74,7 +70,7 @@ const Reports = () => {
 				{filtered.map((scan) => (
 					<div
 						key={scan.id}
-						className="bg-card rounded-xl border border-border p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4 hover:border-medical/30 hover:shadow-md transition-all cursor-pointer"
+						className="bg-card rounded-xl border border-border p-5 flex items-center gap-4 hover:border-medical/30 hover:shadow-md transition-all cursor-pointer"
 						onClick={() => navigate(`/scan/${scan.id}`)}
 					>
 						<div className="flex items-center gap-3 flex-1 min-w-0">
@@ -95,12 +91,12 @@ const Reports = () => {
 									</span>
 									{scan.results && (
 										<>
-											<span className="text-xs text-muted-foreground hidden sm:inline">
+											<span className="text-xs text-muted-foreground mr-1">
 												·
 											</span>
 											<span
 												className={cn(
-													"text-xs font-medium hidden sm:inline",
+													"text-xs font-medium",
 													scan.results.detected
 														? "text-warning"
 														: "text-success",
@@ -116,7 +112,7 @@ const Reports = () => {
 							</div>
 						</div>
 
-						<div className="flex items-center gap-3 flex-wrap">
+						<div className="flex items-center gap-3">
 							{scan.modalities.map((m) => (
 								<span
 									key={m}
@@ -137,7 +133,7 @@ const Reports = () => {
 								}}
 							>
 								<Download className="w-3.5 h-3.5" />
-								<span className="hidden sm:inline">PDF</span>
+								PDF
 							</Button>
 							<Button
 								variant="outline"
@@ -148,7 +144,7 @@ const Reports = () => {
 								}}
 							>
 								<Download className="w-3.5 h-3.5" />
-								<span className="hidden sm:inline">CSV</span>
+								CSV
 							</Button>
 						</div>
 					</div>

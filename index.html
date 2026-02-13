@@ -17,6 +17,24 @@
 			content="MRI Insight Suite - Advanced MRI analysis and visualization"
 		/>
 		<meta property="og:type" content="website" />
+		<script>
+			(function () {
+				try {
+					const theme = localStorage.getItem("theme");
+					if (
+						theme === "dark" ||
+						(!theme &&
+							window.matchMedia("(prefers-color-scheme: dark)").matches)
+					) {
+						document.documentElement.classList.add("dark");
+					} else {
+						document.documentElement.classList.remove("dark");
+					}
+				} catch (e) {
+					console.error("Theme initialization failed:", e);
+				}
+			})();
+		</script>
 	</head>
 
 	<body>
