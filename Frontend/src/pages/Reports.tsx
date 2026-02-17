@@ -53,7 +53,7 @@ const Reports = () => {
 			</div>
 
 			{/* Filters */}
-			<div className="flex items-center gap-4 flex-wrap">
+			<div className="flex items-center gap-4">
 				<div className="relative w-72">
 					<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
 					<Input
@@ -81,7 +81,7 @@ const Reports = () => {
 								<p className="text-sm font-semibold text-foreground truncate">
 									{scan.patientName} — AI Analysis Report
 								</p>
-								<div className="flex items-center gap-2 mt-0.5 flex-wrap">
+								<div className="flex items-center gap-2 mt-0.5">
 									<span className="text-xs text-muted-foreground">
 										{scan.patientId}
 									</span>

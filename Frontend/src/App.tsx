@@ -12,10 +12,11 @@ import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
-import { useNavigate, Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./components/auth/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 
 const queryClient = new QueryClient();
@@ -43,8 +44,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 	return <>{children}</>;
 };
-
-import { Loader2 } from "lucide-react";
 
 const App = () => {
 	useEffect(() => {

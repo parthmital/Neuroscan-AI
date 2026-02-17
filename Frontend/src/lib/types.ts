@@ -1,4 +1,15 @@
 export type Modality = "FLAIR" | "T1" | "T1CE" | "T2";
+export type ScanStatus =
+	| "uploading"
+	| "queued"
+	| "processing"
+	| "completed"
+	| "failed";
+export type PipelineStep =
+	| "detection"
+	| "classification"
+	| "segmentation"
+	| "complete";
 
 export interface ScanResult {
 	detected: boolean;
@@ -16,9 +27,9 @@ export interface MRIScan {
 	patientName: string;
 	scanDate: string;
 	modalities: Modality[];
+	status: ScanStatus;
+	pipelineStep: PipelineStep;
 	progress: number;
-	pipelineStep: string;
-	status: string;
 	results?: ScanResult;
 }
 

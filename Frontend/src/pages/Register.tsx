@@ -70,7 +70,7 @@ const Register = () => {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-background/50 relative overflow-hidden py-12 px-4">
+		<div className="min-h-screen flex items-center justify-center bg-background/50 relative overflow-hidden py-12 px-8">
 			{/* Background Decorations */}
 			<div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-medical/5 rounded-full blur-[120px]" />
 			<div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[120px]" />
@@ -91,7 +91,7 @@ const Register = () => {
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleSubmit} className="space-y-6">
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div className="grid grid-cols-2 gap-6">
 							<div className="space-y-2">
 								<Label htmlFor="fullName">Full Name</Label>
 								<Input
@@ -158,7 +158,7 @@ const Register = () => {
 									className="bg-background/50 border-border/50 focus:border-medical/50"
 								/>
 							</div>
-							<div className="space-y-2 md:col-span-2">
+							<div className="space-y-2 col-span-2">
 								<Label htmlFor="institution">Medical Institution</Label>
 								<Input
 									id="institution"

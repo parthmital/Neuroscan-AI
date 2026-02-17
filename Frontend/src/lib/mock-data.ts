@@ -1,39 +1,4 @@
-export type ScanStatus =
-	| "uploading"
-	| "queued"
-	| "processing"
-	| "completed"
-	| "failed";
-export type Modality = "FLAIR" | "T1" | "T1CE" | "T2";
-export type PipelineStep =
-	| "detection"
-	| "classification"
-	| "segmentation"
-	| "complete";
-
-export interface ScanResult {
-	detected: boolean;
-	classification: string;
-	confidence: number;
-	tumorVolume: number;
-	wtVolume: number;
-	tcVolume: number;
-	etVolume: number;
-}
-
-export interface MRIScan {
-	id: string;
-	patientId: string;
-	patientName: string;
-	scanDate: string;
-	modalities: Modality[];
-	status: ScanStatus;
-	progress: number;
-	pipelineStep: PipelineStep;
-	results?: ScanResult;
-}
-
-export const mockScans: MRIScan[] = [];
+import type { ScanStatus } from "./types";
 
 export const getStatusColor = (status: ScanStatus) => {
 	switch (status) {

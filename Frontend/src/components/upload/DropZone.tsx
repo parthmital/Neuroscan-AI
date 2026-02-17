@@ -4,7 +4,7 @@ import { Upload, FileImage, X, CheckCircle2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { Modality } from "@/lib/mock-data";
+import type { Modality } from "@/lib/types";
 import { useAuth } from "@/components/auth/AuthContext";
 
 interface UploadedFile {

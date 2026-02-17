@@ -1,6 +1,6 @@
 import { Check, Loader2, AlertCircle, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { PipelineStep, MRIScan } from "@/lib/mock-data";
+import type { PipelineStep, MRIScan } from "@/lib/types";
 
 interface ProcessingPipelineProps {
 	scan: MRIScan;

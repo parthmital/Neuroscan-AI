@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Search, Pencil, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ const ScanLibrary = () => {
 	const location = useLocation();
 	const querySearch = new URLSearchParams(location.search).get("search") || "";
 	const [search, setSearch] = useState(querySearch);
-	const [filter, setFilter] = useState<string>("all");
+
 	const [editingScan, setEditingScan] = useState<MRIScan | null>(null);
 	const [editForm, setEditForm] = useState({ patientName: "", patientId: "" });
 	const { data: scans, isLoading: scansLoading } = useScans();
@@ -74,7 +74,7 @@ const ScanLibrary = () => {
 		return (
 			<div className="space-y-6">
 				<div className="h-20 bg-muted rounded-xl w-1/3" />
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+				<div className="grid grid-cols-3 gap-4">
 					{[1, 2, 3].map((i) => (
 						<div key={i} className="h-48 bg-muted rounded-xl" />
 					))}

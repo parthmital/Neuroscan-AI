@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Eye, RotateCcw, MoreHorizontal, Trash2, Pencil } from "lucide-react";
+import { Eye, MoreHorizontal, Trash2, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -68,7 +68,7 @@ export const RecentScans = () => {
 
 	return (
 		<div className="bg-card rounded-xl border border-border overflow-hidden">
-			<div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-border">
+			<div className="flex items-center justify-between px-6 py-4 border-b border-border">
 				<h2 className="text-sm font-semibold text-foreground">
 					{(config as AppConfig).dashboard.recentScansTitle}
 				</h2>
@@ -82,113 +82,23 @@ export const RecentScans = () => {
 				</Button>
 			</div>
 
-			{/* Mobile card view */}
-			<div className="sm:hidden divide-y divide-border">
-				{(scans as MRIScan[]).slice(0, 6).map((scan) => {
-					return (
-						<div
-							key={scan.id}
-							className="px-4 sm:px-6 py-4 cursor-pointer hover:bg-muted/30 transition-colors"
-							onClick={() => navigate(`/scan/${scan.id}`)}
-						>
-							<div className="flex items-start justify-between mb-2">
-								<div>
-									<p className="text-sm font-medium text-foreground">
-										{scan.patientName}
-									</p>
-									<p className="text-xs text-muted-foreground">
-										{scan.patientId}
-									</p>
-								</div>
-							</div>
-							<div className="flex items-center gap-2 text-xs text-muted-foreground">
-								<span>{scan.scanDate}</span>
-								<span>·</span>
-								<span>
-									{scan.results
-										? scan.results.detected
-											? scan.results.classification
-											: "No Tumour"
-										: "Pending"}
-								</span>
-							</div>
-							<div className="flex gap-2 mt-3">
-								<Button
-									variant="ghost"
-									size="sm"
-									className="text-xs text-muted-foreground"
-									onClick={(e) => {
-										e.stopPropagation();
-										navigate(`/scan/${scan.id}`);
-									}}
-								>
-									<Eye className="w-3.5 h-3.5 mr-1" />
-									View
-								</Button>
-								<Button
-									variant="ghost"
-									size="sm"
-									className="text-xs text-muted-foreground"
-									onClick={(e) => {
-										e.stopPropagation();
-										handleEditClick(scan);
-									}}
-								>
-									<Pencil className="w-3.5 h-3.5 mr-1" />
-									Edit
-								</Button>
-								<Button
-									variant="ghost"
-									size="sm"
-									className="text-xs text-destructive hover:text-destructive"
-									onClick={async (e) => {
-										e.stopPropagation();
-										if (confirm("Are you sure you want to delete this scan?")) {
-											try {
-												const token = localStorage.getItem("token");
-												await fetch(
-													`http://localhost:8000/api/scans/${scan.id}`,
-													{
-														method: "DELETE",
-														headers: {
-															Authorization: `Bearer ${token}`,
-														},
-													},
-												);
-												window.location.reload(); // Simple reload to refresh data
-											} catch (err) {
-												console.error("Failed to delete", err);
-											}
-										}
-									}}
-								>
-									<Trash2 className="w-3.5 h-3.5 mr-1" />
-									Delete
-								</Button>
-							</div>
-						</div>
-					);
-				})}
-			</div>
-
-			{/* Desktop table view */}
-			<div className="hidden sm:block overflow-x-auto">
+			<div className="overflow-x-auto">
 				<Table>
 					<TableHeader>
 						<TableRow className="hover:bg-transparent">
-							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
 								Patient
 							</TableHead>
-							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground hidden md:table-cell">
+							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
 								Date
 							</TableHead>
-							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground hidden lg:table-cell">
+							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
 								Modalities
 							</TableHead>
-							<TableHead className="px-4 sm:px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground hidden md:table-cell">
+							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
 								Result
 							</TableHead>
-							<TableHead className="px-4 sm:px-6 py-4 w-[80px]" />
+							<TableHead className="px-6 py-4 w-[80px]" />
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -199,7 +109,7 @@ export const RecentScans = () => {
 									className="cursor-pointer group"
 									onClick={() => navigate(`/scan/${scan.id}`)}
 								>
-									<TableCell className="px-4 sm:px-6 py-4">
+									<TableCell className="px-6 py-4">
 										<div>
 											<p className="text-sm font-medium text-foreground">
 												{scan.patientName}
@@ -209,10 +119,10 @@ export const RecentScans = () => {
 											</p>
 										</div>
 									</TableCell>
-									<TableCell className="px-4 sm:px-6 py-4 text-sm text-muted-foreground hidden md:table-cell">
+									<TableCell className="px-6 py-4 text-sm text-muted-foreground">
 										{scan.scanDate}
 									</TableCell>
-									<TableCell className="px-4 sm:px-6 py-4 hidden lg:table-cell">
+									<TableCell className="px-6 py-4">
 										<div className="flex gap-1">
 											{scan.modalities.map((m: string) => (
 												<span
@@ -224,7 +134,7 @@ export const RecentScans = () => {
 											))}
 										</div>
 									</TableCell>
-									<TableCell className="px-4 sm:px-6 py-4">
+									<TableCell className="px-6 py-4">
 										<span className="text-sm text-muted-foreground">
 											{scan.results
 												? scan.results.detected
@@ -233,7 +143,7 @@ export const RecentScans = () => {
 												: "—"}
 										</span>
 									</TableCell>
-									<TableCell className="px-4 sm:px-6 py-4">
+									<TableCell className="px-6 py-4">
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
 												<button className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">

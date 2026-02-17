@@ -49,7 +49,7 @@ export const StatsCards = () => {
 
 	if (isLoading || !stats) {
 		return (
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+			<div className="grid grid-cols-4 gap-5">
 				{[1, 2, 3, 4].map((i) => (
 					<div
 						key={i}
@@ -61,7 +61,7 @@ export const StatsCards = () => {
 	}
 
 	return (
-		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+		<div className="grid grid-cols-4 gap-5">
 			{stats.map((stat, index) => {
 				const Icon = iconMap[stat.type] || HelpCircle;
 				return (
