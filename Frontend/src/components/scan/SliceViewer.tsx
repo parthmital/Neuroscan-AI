@@ -226,7 +226,6 @@ export const SliceViewer = ({
 		scanId,
 		debouncedSlice,
 		selectedModality,
-		totalSlices,
 		debouncedOverlays,
 		debouncedOverlayColors,
 	]);

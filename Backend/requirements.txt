@@ -10,3 +10,5 @@ scikit-image
 numpy
 pydantic
 sqlmodel
+python-jose[cryptography]
+bcrypt

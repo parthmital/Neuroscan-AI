@@ -35,23 +35,7 @@ export const DropZone = () => {
 		setIsDragging(false);
 	}, []);
 
-	const handleDrop = useCallback((e: React.DragEvent) => {
-		e.preventDefault();
-		setIsDragging(false);
-		const droppedFiles = Array.from(e.dataTransfer.files);
-		addFiles(droppedFiles);
-	}, []);
-
-	const handleFileInput = useCallback(
-		(e: React.ChangeEvent<HTMLInputElement>) => {
-			if (e.target.files) {
-				addFiles(Array.from(e.target.files));
-			}
-		},
-		[],
-	);
-
-	const addFiles = (newFiles: File[]) => {
+	const addFiles = useCallback((newFiles: File[]) => {
 		const uploadFiles: UploadedFile[] = newFiles.map((f) => ({
 			id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
 			name: f.name,
@@ -61,7 +45,7 @@ export const DropZone = () => {
 			file: f,
 		}));
 		setFiles((prev) => [...prev, ...uploadFiles]);
-	};
+	}, []);
 
 	const detectModality = (filename: string): Modality | undefined => {
 		const upper = filename.toUpperCase();
@@ -71,6 +55,25 @@ export const DropZone = () => {
 		if (upper.includes("T2")) return "T2";
 		return undefined;
 	};
+
+	const handleDrop = useCallback(
+		(e: React.DragEvent) => {
+			e.preventDefault();
+			setIsDragging(false);
+			const droppedFiles = Array.from(e.dataTransfer.files);
+			addFiles(droppedFiles);
+		},
+		[addFiles],
+	);
+
+	const handleFileInput = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			if (e.target.files) {
+				addFiles(Array.from(e.target.files));
+			}
+		},
+		[addFiles],
+	);
 
 	const removeFile = (id: string) => {
 		setFiles((prev) => prev.filter((f) => f.id !== id));

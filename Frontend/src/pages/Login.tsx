@@ -48,8 +48,10 @@ const Login = () => {
 			login(data.access_token, data.user);
 			toast.success("Welcome back, " + data.user.fullName);
 			navigate("/");
-		} catch (error: any) {
-			toast.error(error.message);
+		} catch (error: unknown) {
+			const errorMessage =
+				error instanceof Error ? error.message : "An unknown error occurred";
+			toast.error(errorMessage);
 		} finally {
 			setIsLoading(false);
 		}
