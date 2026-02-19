@@ -2,7 +2,6 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Download, FileText, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { SliceViewer } from "@/components/scan/SliceViewer";
-import { QuadViewer } from "@/components/scan/QuadViewer";
 import { SegmentationControls } from "@/components/scan/SegmentationControls";
 import { ProcessingPipeline } from "@/components/scan/ProcessingPipeline";
 import { Button } from "@/components/ui/button";
@@ -40,8 +39,6 @@ const ScanDetail = () => {
 					et: "#3b82f6",
 				};
 	});
-
-	const [viewMode, setViewMode] = useState<"2d" | "3d">("2d");
 
 	if (configLoading || scansLoading || !config) {
 		return (
@@ -144,49 +141,14 @@ const ScanDetail = () => {
 								<h2 className="text-sm font-semibold text-foreground">
 									Scan Visualisation
 								</h2>
-								<div className="bg-muted p-1 rounded-lg inline-flex">
-									<button
-										onClick={() => setViewMode("2d")}
-										className={cn(
-											"px-3 py-1.5 text-xs font-medium rounded-md transition-all",
-											viewMode === "2d"
-												? "bg-background text-foreground shadow-sm"
-												: "text-muted-foreground hover:text-foreground",
-										)}
-									>
-										2D Slices
-									</button>
-									<button
-										onClick={() => setViewMode("3d")}
-										className={cn(
-											"px-3 py-1.5 text-xs font-medium rounded-md transition-all",
-											viewMode === "3d"
-												? "bg-background text-foreground shadow-sm"
-												: "text-muted-foreground hover:text-foreground",
-										)}
-									>
-										3D Volume
-									</button>
-								</div>
 							</div>
 
-							{viewMode === "2d" ? (
-								<SliceViewer
-									scanId={scan.id}
-									modalities={scan.modalities}
-									overlays={overlays}
-									overlayColors={overlayColors}
-								/>
-							) : (
-								<div className="aspect-square bg-black rounded-xl overflow-hidden border border-border relative">
-									<QuadViewer
-										scanId={scan.id}
-										modality={scan.modalities[0]?.toLowerCase() || "flair"}
-										overlays={overlays}
-										overlayColors={overlayColors}
-									/>
-								</div>
-							)}
+							<SliceViewer
+								scanId={scan.id}
+								modalities={scan.modalities}
+								overlays={overlays}
+								overlayColors={overlayColors}
+							/>
 						</div>
 						<div className="space-y-6">
 							<SegmentationControls
