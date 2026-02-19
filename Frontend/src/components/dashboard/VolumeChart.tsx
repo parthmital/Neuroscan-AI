@@ -28,7 +28,7 @@ export const VolumeChart = () => {
 
 	if (scansLoading || configLoading || !scans || !config) {
 		return (
-			<div className="bg-card rounded-xl border border-border p-6 h-[320px]" />
+			<div className="h-[320px] rounded-xl border border-border bg-card p-6" />
 		);
 	}
 
@@ -42,11 +42,11 @@ export const VolumeChart = () => {
 		}));
 
 	return (
-		<div className="bg-card rounded-xl border border-border p-6 animate-fade-in">
-			<h2 className="text-sm font-semibold text-foreground mb-1">
+		<div className="animate-fade-in rounded-xl border border-border bg-card p-6">
+			<h2 className="mb-1 text-sm font-semibold text-foreground">
 				{(config as AppConfig).volumeChart.title}
 			</h2>
-			<p className="text-xs text-muted-foreground mb-6">
+			<p className="mb-6 text-xs text-muted-foreground">
 				{(config as AppConfig).volumeChart.subtitle}
 			</p>
 			<div className="h-[220px]">
@@ -99,24 +99,24 @@ export const VolumeChart = () => {
 					</BarChart>
 				</ResponsiveContainer>
 			</div>
-			<div className="flex items-center gap-5 mt-4">
+			<div className="mt-4 flex items-center gap-5">
 				<div className="flex items-center gap-2 text-xs text-muted-foreground">
 					<div
-						className="w-2.5 h-2.5 rounded-sm"
+						className="h-2.5 w-2.5 rounded-sm"
 						style={{ background: overlayColors.wt }}
 					/>
 					WT
 				</div>
 				<div className="flex items-center gap-2 text-xs text-muted-foreground">
 					<div
-						className="w-2.5 h-2.5 rounded-sm"
+						className="h-2.5 w-2.5 rounded-sm"
 						style={{ background: overlayColors.tc }}
 					/>
 					TC
 				</div>
 				<div className="flex items-center gap-2 text-xs text-muted-foreground">
 					<div
-						className="w-2.5 h-2.5 rounded-sm"
+						className="h-2.5 w-2.5 rounded-sm"
 						style={{ background: overlayColors.et }}
 					/>
 					ET

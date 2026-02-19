@@ -256,8 +256,8 @@ export const SliceViewer = ({
 
 	return (
 		<div className="space-y-3">
-			<div className="flex items-center gap-3 sm:gap-4 px-1">
-				<span className="text-xs font-mono text-muted-foreground w-14 shrink-0">
+			<div className="flex items-center gap-3 px-1 sm:gap-4">
+				<span className="w-14 shrink-0 font-mono text-xs text-muted-foreground">
 					Slice {slice + 1}
 				</span>
 				<Slider
@@ -268,19 +268,19 @@ export const SliceViewer = ({
 					step={1}
 					className="flex-1"
 				/>
-				<span className="text-xs font-mono text-muted-foreground w-8 text-right shrink-0">
+				<span className="w-8 shrink-0 text-right font-mono text-xs text-muted-foreground">
 					{totalSlices}
 				</span>
 			</div>
 			<div
 				ref={containerRef}
-				className="relative bg-black rounded-xl overflow-hidden border border-border aspect-square flex items-center justify-center"
+				className="relative flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-border bg-black"
 			>
 				{isLoading && (
-					<div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-10">
+					<div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-sm">
 						<div className="flex flex-col items-center gap-2">
-							<div className="w-8 h-8 border-2 border-medical border-t-transparent rounded-full animate-spin" />
-							<p className="text-[10px] text-medical font-mono tracking-widest uppercase">
+							<div className="h-8 w-8 animate-spin rounded-full border-2 border-medical border-t-transparent" />
+							<p className="font-mono text-[10px] uppercase tracking-widest text-medical">
 								Loading Slice
 							</p>
 						</div>
@@ -290,15 +290,15 @@ export const SliceViewer = ({
 					ref={canvasRef}
 					width={CANVAS_SIZE}
 					height={CANVAS_SIZE}
-					className="w-full h-full object-contain"
+					className="h-full w-full object-contain"
 				/>
 
 				{/* HUD Overlay */}
-				<div className="absolute top-4 left-4 pointer-events-none">
-					<p className="text-[10px] font-mono text-medical/80">
+				<div className="pointer-events-none absolute left-4 top-4">
+					<p className="font-mono text-[10px] text-medical/80">
 						Slice: {slice + 1}/{totalSlices}
 					</p>
-					<p className="text-[10px] font-mono text-medical/80">
+					<p className="font-mono text-[10px] text-medical/80">
 						Modality: {selectedModality}
 					</p>
 				</div>
@@ -311,10 +311,10 @@ export const SliceViewer = ({
 							key={m}
 							onClick={() => setSelectedModality(m)}
 							className={cn(
-								"px-3 py-1.5 text-xs font-semibold rounded-md border transition-all",
+								"rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
 								selectedModality === m
-									? "bg-medical text-medical-foreground border-medical shadow-sm"
-									: "bg-card text-muted-foreground border-border hover:border-medical/50 hover:bg-muted/50",
+									? "border-medical bg-medical text-medical-foreground shadow-sm"
+									: "border-border bg-card text-muted-foreground hover:border-medical/50 hover:bg-muted/50",
 							)}
 						>
 							{m}

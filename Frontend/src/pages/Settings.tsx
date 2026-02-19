@@ -65,9 +65,9 @@ const Settings = () => {
 
 	if (configLoading || !config || !user) {
 		return (
-			<div className="space-y-6 max-w-3xl">
-				<div className="h-20 bg-muted rounded-xl w-1/3" />
-				<div className="h-64 bg-muted rounded-xl" />
+			<div className="max-w-3xl space-y-6">
+				<div className="h-20 w-1/3 rounded-xl bg-muted" />
+				<div className="h-64 rounded-xl bg-muted" />
 			</div>
 		);
 	}
@@ -116,37 +116,37 @@ const Settings = () => {
 	};
 
 	return (
-		<div className="space-y-6 w-full">
+		<div className="w-full space-y-6">
 			<div>
-				<h1 className="text-2xl font-bold text-foreground tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight text-foreground">
 					Settings
 				</h1>
-				<p className="text-sm text-muted-foreground mt-1">
+				<p className="mt-1 text-sm text-muted-foreground">
 					Manage your account, preferences, and application settings.
 				</p>
 			</div>
 
 			<Tabs defaultValue="profile" className="space-y-6">
-				<TabsList className="bg-muted/50 gap-1 p-1">
+				<TabsList className="gap-1 bg-muted/50 p-1">
 					<TabsTrigger value="profile" className="gap-1.5 text-xs">
-						<User className="w-3.5 h-3.5" />
+						<User className="h-3.5 w-3.5" />
 						Profile
 					</TabsTrigger>
 					<TabsTrigger value="appearance" className="gap-1.5 text-xs">
-						<Palette className="w-3.5 h-3.5" />
+						<Palette className="h-3.5 w-3.5" />
 						Appearance
 					</TabsTrigger>
 					<TabsTrigger value="security" className="gap-1.5 text-xs">
-						<Shield className="w-3.5 h-3.5" />
+						<Shield className="h-3.5 w-3.5" />
 						Security
 					</TabsTrigger>
 				</TabsList>
 
 				{/* Profile */}
 				<TabsContent value="profile">
-					<div className="bg-card rounded-xl border border-border p-6 space-y-6">
+					<div className="space-y-6 rounded-xl border border-border bg-card p-6">
 						<div>
-							<h2 className="text-sm font-semibold text-foreground mb-4">
+							<h2 className="mb-4 text-sm font-semibold text-foreground">
 								Profile Information
 							</h2>
 							<div className="grid grid-cols-2 gap-4">
@@ -226,7 +226,7 @@ const Settings = () => {
 										className="h-9 text-sm"
 									/>
 								</div>
-								<div className="space-y-2 col-span-2">
+								<div className="col-span-2 space-y-2">
 									<label className="text-xs font-medium text-muted-foreground">
 										Institution
 									</label>
@@ -244,12 +244,12 @@ const Settings = () => {
 							</div>
 						</div>
 
-						<div className="flex justify-end pt-2 border-t border-border">
+						<div className="flex justify-end border-t border-border pt-2">
 							<Button
 								onClick={handleSaveChanges}
-								className="bg-medical text-medical-foreground hover:bg-medical/90 text-xs gap-1.5"
+								className="gap-1.5 bg-medical text-xs text-medical-foreground hover:bg-medical/90"
 							>
-								<Save className="w-3.5 h-3.5" />
+								<Save className="h-3.5 w-3.5" />
 								Save Changes
 							</Button>
 						</div>
@@ -258,25 +258,25 @@ const Settings = () => {
 
 				{/* Appearance */}
 				<TabsContent value="appearance">
-					<div className="bg-card rounded-xl border border-border p-6 space-y-6">
+					<div className="space-y-6 rounded-xl border border-border bg-card p-6">
 						<div>
-							<h2 className="text-sm font-semibold text-foreground mb-1">
+							<h2 className="mb-1 text-sm font-semibold text-foreground">
 								Theme
 							</h2>
-							<p className="text-xs text-muted-foreground mb-4">
+							<p className="mb-4 text-xs text-muted-foreground">
 								Customise the application appearance.
 							</p>
 							<div className="grid grid-cols-2 gap-3">
 								<button
 									onClick={() => setDarkMode(false)}
 									className={cn(
-										"flex items-center gap-3 p-4 rounded-lg border-2",
+										"flex items-center gap-3 rounded-lg border-2 p-4",
 										!darkMode
 											? "border-medical bg-medical/5"
 											: "border-border hover:border-muted-foreground/30",
 									)}
 								>
-									<Sun className="w-5 h-5 text-warning" />
+									<Sun className="h-5 w-5 text-warning" />
 									<div className="text-left">
 										<p className="text-sm font-medium text-foreground">Light</p>
 										<p className="text-xs text-muted-foreground">
@@ -287,13 +287,13 @@ const Settings = () => {
 								<button
 									onClick={() => setDarkMode(true)}
 									className={cn(
-										"flex items-center gap-3 p-4 rounded-lg border-2",
+										"flex items-center gap-3 rounded-lg border-2 p-4",
 										darkMode
 											? "border-medical bg-medical/5"
 											: "border-border hover:border-muted-foreground/30",
 									)}
 								>
-									<Moon className="w-5 h-5 text-info" />
+									<Moon className="h-5 w-5 text-info" />
 									<div className="text-left">
 										<p className="text-sm font-medium text-foreground">Dark</p>
 										<p className="text-xs text-muted-foreground">
@@ -305,10 +305,10 @@ const Settings = () => {
 						</div>
 
 						<div>
-							<h2 className="text-sm font-semibold text-foreground mb-1">
+							<h2 className="mb-1 text-sm font-semibold text-foreground">
 								Overlay Defaults
 							</h2>
-							<p className="text-xs text-muted-foreground mb-4">
+							<p className="mb-4 text-xs text-muted-foreground">
 								Set default segmentation overlay colours.
 							</p>
 							<div className="space-y-3">
@@ -331,7 +331,7 @@ const Settings = () => {
 								].map((item) => (
 									<div
 										key={item.id}
-										className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border"
+										className="flex items-center gap-3 rounded-lg border border-border bg-muted/30 p-3"
 									>
 										<input
 											type="color"
@@ -342,14 +342,14 @@ const Settings = () => {
 													[item.id]: e.target.value,
 												}))
 											}
-											className="w-8 h-8 rounded shrink-0 cursor-pointer bg-transparent border-none"
+											className="h-8 w-8 shrink-0 cursor-pointer rounded border-none bg-transparent"
 										/>
-										<span className="text-sm text-foreground flex-1">
+										<span className="flex-1 text-sm text-foreground">
 											{item.label}
 										</span>
 										<Input
 											value={item.color}
-											className="h-7 w-24 text-xs font-mono uppercase"
+											className="h-7 w-24 font-mono text-xs uppercase"
 											readOnly
 										/>
 									</div>
@@ -361,12 +361,12 @@ const Settings = () => {
 
 				{/* Security */}
 				<TabsContent value="security">
-					<div className="bg-card rounded-xl border border-border p-6 space-y-6">
+					<div className="space-y-6 rounded-xl border border-border bg-card p-6">
 						<div>
-							<h2 className="text-sm font-semibold text-foreground mb-1">
+							<h2 className="mb-1 text-sm font-semibold text-foreground">
 								Change Password
 							</h2>
-							<p className="text-xs text-muted-foreground mb-4">
+							<p className="mb-4 text-xs text-muted-foreground">
 								Update your account password.
 							</p>
 							<div className="space-y-3">
@@ -392,15 +392,15 @@ const Settings = () => {
 						</div>
 
 						<div>
-							<h2 className="text-sm font-semibold text-foreground mb-1">
+							<h2 className="mb-1 text-sm font-semibold text-foreground">
 								Two-Factor Authentication
 							</h2>
-							<p className="text-xs text-muted-foreground mb-4">
+							<p className="mb-4 text-xs text-muted-foreground">
 								Add an extra layer of security to your account.
 							</p>
-							<div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border">
-								<Shield className="w-5 h-5 text-medical shrink-0" />
-								<div className="flex-1 min-w-0">
+							<div className="flex items-center gap-3 rounded-lg border border-border bg-muted/30 p-3">
+								<Shield className="h-5 w-5 shrink-0 text-medical" />
+								<div className="min-w-0 flex-1">
 									<p className="text-sm font-medium text-foreground">
 										Enable 2FA
 									</p>
@@ -412,8 +412,8 @@ const Settings = () => {
 							</div>
 						</div>
 
-						<div className="flex justify-end pt-2 border-t border-border">
-							<Button className="bg-medical text-medical-foreground hover:bg-medical/90 text-xs gap-1.5">
+						<div className="flex justify-end border-t border-border pt-2">
+							<Button className="gap-1.5 bg-medical text-xs text-medical-foreground hover:bg-medical/90">
 								Update Security
 							</Button>
 						</div>

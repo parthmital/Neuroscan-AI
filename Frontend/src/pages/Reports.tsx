@@ -16,11 +16,11 @@ const Reports = () => {
 
 	if (scansLoading || configLoading || !scans || !config) {
 		return (
-			<div className="space-y-6 animate-pulse">
-				<div className="h-20 bg-muted rounded-xl w-1/2" />
+			<div className="animate-pulse space-y-6">
+				<div className="h-20 w-1/2 rounded-xl bg-muted" />
 				<div className="space-y-3">
 					{[1, 2, 3].map((i) => (
-						<div key={i} className="h-24 bg-muted rounded-xl" />
+						<div key={i} className="h-24 rounded-xl bg-muted" />
 					))}
 				</div>
 			</div>
@@ -39,15 +39,15 @@ const Reports = () => {
 		<div className="space-y-6">
 			<div className="flex items-center justify-between gap-4">
 				<div>
-					<h1 className="text-2xl font-bold text-foreground tracking-tight">
+					<h1 className="text-2xl font-bold tracking-tight text-foreground">
 						{(config as AppConfig).reports.title}
 					</h1>
-					<p className="text-sm text-muted-foreground mt-1">
+					<p className="mt-1 text-sm text-muted-foreground">
 						{(config as AppConfig).reports.subtitle}
 					</p>
 				</div>
 				<Button variant="outline" size="sm" className="gap-1.5 text-xs">
-					<Download className="w-3.5 h-3.5" />
+					<Download className="h-3.5 w-3.5" />
 					{(config as AppConfig).reports.exportAll}
 				</Button>
 			</div>
@@ -55,12 +55,12 @@ const Reports = () => {
 			{/* Filters */}
 			<div className="flex items-center gap-4">
 				<div className="relative w-72">
-					<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+					<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 					<Input
 						placeholder={(config as AppConfig).reports.searchPlaceholder}
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
-						className="pl-9 h-9 bg-muted/50 border-none text-sm"
+						className="h-9 border-none bg-muted/50 pl-9 text-sm"
 					/>
 				</div>
 			</div>
@@ -70,18 +70,18 @@ const Reports = () => {
 				{filtered.map((scan) => (
 					<div
 						key={scan.id}
-						className="bg-card rounded-xl border border-border p-5 flex items-center gap-4 hover:border-medical/30 hover:shadow-md transition-all cursor-pointer"
+						className="flex cursor-pointer items-center gap-4 rounded-xl border border-border bg-card p-5 transition-all hover:border-medical/30 hover:shadow-md"
 						onClick={() => navigate(`/scan/${scan.id}`)}
 					>
-						<div className="flex items-center gap-3 flex-1 min-w-0">
-							<div className="w-10 h-10 rounded-lg bg-medical/10 flex items-center justify-center shrink-0">
-								<FileText className="w-5 h-5 text-medical" />
+						<div className="flex min-w-0 flex-1 items-center gap-3">
+							<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-medical/10">
+								<FileText className="h-5 w-5 text-medical" />
 							</div>
 							<div className="min-w-0">
-								<p className="text-sm font-semibold text-foreground truncate">
+								<p className="truncate text-sm font-semibold text-foreground">
 									{scan.patientName} — AI Analysis Report
 								</p>
-								<div className="flex items-center gap-2 mt-0.5">
+								<div className="mt-0.5 flex items-center gap-2">
 									<span className="text-xs text-muted-foreground">
 										{scan.patientId}
 									</span>
@@ -91,7 +91,7 @@ const Reports = () => {
 									</span>
 									{scan.results && (
 										<>
-											<span className="text-xs text-muted-foreground mr-1">
+											<span className="mr-1 text-xs text-muted-foreground">
 												·
 											</span>
 											<span
@@ -116,14 +116,14 @@ const Reports = () => {
 							{scan.modalities.map((m) => (
 								<span
 									key={m}
-									className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-muted text-muted-foreground"
+									className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground"
 								>
 									{m}
 								</span>
 							))}
 						</div>
 
-						<div className="flex items-center gap-2 shrink-0">
+						<div className="flex shrink-0 items-center gap-2">
 							<Button
 								variant="outline"
 								size="sm"
@@ -132,7 +132,7 @@ const Reports = () => {
 									e.stopPropagation();
 								}}
 							>
-								<Download className="w-3.5 h-3.5" />
+								<Download className="h-3.5 w-3.5" />
 								PDF
 							</Button>
 							<Button
@@ -143,7 +143,7 @@ const Reports = () => {
 									e.stopPropagation();
 								}}
 							>
-								<Download className="w-3.5 h-3.5" />
+								<Download className="h-3.5 w-3.5" />
 								CSV
 							</Button>
 						</div>
@@ -152,12 +152,12 @@ const Reports = () => {
 			</div>
 
 			{filtered.length === 0 && (
-				<div className="text-center py-16 text-muted-foreground">
-					<FileText className="w-10 h-10 mx-auto mb-3 opacity-30" />
+				<div className="py-16 text-center text-muted-foreground">
+					<FileText className="mx-auto mb-3 h-10 w-10 opacity-30" />
 					<p className="text-sm font-medium">
 						{(config as AppConfig).reports.noReportsFound}
 					</p>
-					<p className="text-xs mt-1">
+					<p className="mt-1 text-xs">
 						{(config as AppConfig).reports.autoGenerated}
 					</p>
 				</div>

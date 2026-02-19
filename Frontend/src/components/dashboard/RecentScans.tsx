@@ -63,12 +63,12 @@ export const RecentScans = () => {
 	};
 
 	if (scansLoading || configLoading || !scans || !config) {
-		return <div className="h-64 bg-card rounded-xl border border-border" />;
+		return <div className="h-64 rounded-xl border border-border bg-card" />;
 	}
 
 	return (
-		<div className="bg-card rounded-xl border border-border overflow-hidden">
-			<div className="flex items-center justify-between px-6 py-4 border-b border-border">
+		<div className="overflow-hidden rounded-xl border border-border bg-card">
+			<div className="flex items-center justify-between border-b border-border px-6 py-4">
 				<h2 className="text-sm font-semibold text-foreground">
 					{(config as AppConfig).dashboard.recentScansTitle}
 				</h2>
@@ -86,19 +86,19 @@ export const RecentScans = () => {
 				<Table>
 					<TableHeader>
 						<TableRow className="hover:bg-transparent">
-							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 								Patient
 							</TableHead>
-							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 								Date
 							</TableHead>
-							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 								Modalities
 							</TableHead>
-							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 								Result
 							</TableHead>
-							<TableHead className="px-6 py-4 w-[80px]" />
+							<TableHead className="w-[80px] px-6 py-4" />
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -106,7 +106,7 @@ export const RecentScans = () => {
 							return (
 								<TableRow
 									key={scan.id}
-									className="cursor-pointer group"
+									className="group cursor-pointer"
 									onClick={() => navigate(`/scan/${scan.id}`)}
 								>
 									<TableCell className="px-6 py-4">
@@ -127,7 +127,7 @@ export const RecentScans = () => {
 											{scan.modalities.map((m: string) => (
 												<span
 													key={m}
-													className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-muted text-muted-foreground"
+													className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground"
 												>
 													{m}
 												</span>
@@ -146,8 +146,8 @@ export const RecentScans = () => {
 									<TableCell className="px-6 py-4">
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
-												<button className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
-													<MoreHorizontal className="w-3.5 h-3.5" />
+												<button className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+													<MoreHorizontal className="h-3.5 w-3.5" />
 												</button>
 											</DropdownMenuTrigger>
 											<DropdownMenuContent align="end">
@@ -157,7 +157,7 @@ export const RecentScans = () => {
 														navigate(`/scan/${scan.id}`);
 													}}
 												>
-													<Eye className="w-3.5 h-3.5 mr-2" />
+													<Eye className="mr-2 h-3.5 w-3.5" />
 													View Details
 												</DropdownMenuItem>
 												<DropdownMenuItem
@@ -166,7 +166,7 @@ export const RecentScans = () => {
 														handleEditClick(scan);
 													}}
 												>
-													<Pencil className="w-3.5 h-3.5 mr-2" />
+													<Pencil className="mr-2 h-3.5 w-3.5" />
 													Edit Details
 												</DropdownMenuItem>
 												<DropdownMenuItem
@@ -196,7 +196,7 @@ export const RecentScans = () => {
 														}
 													}}
 												>
-													<Trash2 className="w-3.5 h-3.5 mr-2" />
+													<Trash2 className="mr-2 h-3.5 w-3.5" />
 													Delete Scan
 												</DropdownMenuItem>
 											</DropdownMenuContent>

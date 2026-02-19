@@ -55,20 +55,20 @@ export const SegmentationControls = ({
 	return (
 		<div className="space-y-5">
 			<div>
-				<h3 className="text-xs font-semibold tracking-wider uppercase text-muted-foreground mb-3">
+				<h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 					Segmentation Overlay
 				</h3>
 				<div className="space-y-3">
 					{regions.map((region) => (
 						<div
 							key={region.key}
-							className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border"
+							className="flex items-start gap-3 rounded-lg border border-border bg-muted/30 p-3"
 						>
 							<div
-								className="w-3 h-3 rounded-sm mt-0.5 shrink-0"
+								className="mt-0.5 h-3 w-3 shrink-0 rounded-sm"
 								style={{ backgroundColor: region.color }}
 							/>
-							<div className="flex-1 min-w-0">
+							<div className="min-w-0 flex-1">
 								<p className="text-sm font-medium text-foreground">
 									{region.label}
 								</p>
@@ -87,11 +87,11 @@ export const SegmentationControls = ({
 			</div>
 
 			<div>
-				<div className="flex items-center justify-between mb-2">
-					<h3 className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+				<div className="mb-2 flex items-center justify-between">
+					<h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 						Overlay Opacity
 					</h3>
-					<span className="text-xs font-mono text-muted-foreground">
+					<span className="font-mono text-xs text-muted-foreground">
 						{Math.round(overlays.opacity * 100)}%
 					</span>
 				</div>

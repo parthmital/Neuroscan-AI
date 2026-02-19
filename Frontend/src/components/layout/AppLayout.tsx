@@ -27,15 +27,15 @@ export const AppLayout = () => {
 				<AppSidebar />
 			</div>
 
-			<div className="flex-1 flex flex-col min-w-0">
+			<div className="flex min-w-0 flex-1 flex-col">
 				{/* Top bar */}
-				<header className="sticky top-0 z-30 h-16 bg-background/80 backdrop-blur-md border-b border-border flex items-center px-8">
-					<div className="flex items-center gap-8 flex-1 mr-8">
+				<header className="sticky top-0 z-30 flex h-16 items-center border-b border-border bg-background/80 px-8 backdrop-blur-md">
+					<div className="mr-8 flex flex-1 items-center gap-8">
 						<div className="relative flex-1">
-							<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+							<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 							<Input
 								placeholder={config?.dashboard.searchPlaceholder || "Search..."}
-								className="pl-9 h-9 bg-muted/50 border-none text-sm"
+								className="h-9 border-none bg-muted/50 pl-9 text-sm"
 								value={searchQuery}
 								onChange={(e) => setSearchQuery(e.target.value)}
 								onKeyDown={(e) => {
@@ -55,13 +55,13 @@ export const AppLayout = () => {
 								<span className="text-sm font-medium leading-none">
 									{user?.fullName}
 								</span>
-								<span className="text-[10px] text-muted-foreground uppercase tracking-tight">
+								<span className="text-[10px] uppercase tracking-tight text-muted-foreground">
 									{user?.title || "Physician"}
 								</span>
 							</div>
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild>
-									<button className="w-9 h-9 rounded-full bg-medical/10 border border-medical/20 flex items-center justify-center text-medical font-bold hover:bg-medical/20 transition-all">
+									<button className="flex h-9 w-9 items-center justify-center rounded-full border border-medical/20 bg-medical/10 font-bold text-medical transition-all hover:bg-medical/20">
 										{user?.fullName
 											.split(" ")
 											.map((n) => n[0])

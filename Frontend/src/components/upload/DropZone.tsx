@@ -149,9 +149,9 @@ export const DropZone = () => {
 				onDragLeave={handleDragLeave}
 				onDrop={handleDrop}
 				className={cn(
-					"relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-200 cursor-pointer group",
+					"group relative cursor-pointer rounded-2xl border-2 border-dashed p-12 text-center transition-all duration-200",
 					isDragging
-						? "border-medical bg-medical-light/50 scale-[1.01]"
+						? "scale-[1.01] border-medical bg-medical-light/50"
 						: "border-border hover:border-medical/40 hover:bg-muted/30",
 				)}
 				onClick={() => document.getElementById("file-input")?.click()}
@@ -166,18 +166,18 @@ export const DropZone = () => {
 				/>
 				<div
 					className={cn(
-						"w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4 transition-colors",
+						"mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl transition-colors",
 						isDragging
 							? "bg-medical text-medical-foreground"
 							: "bg-muted text-muted-foreground group-hover:bg-medical/10 group-hover:text-medical",
 					)}
 				>
-					<Upload className="w-7 h-7" />
+					<Upload className="h-7 w-7" />
 				</div>
-				<h3 className="text-lg font-semibold text-foreground mb-1">
+				<h3 className="mb-1 text-lg font-semibold text-foreground">
 					Drop your MRI files here
 				</h3>
-				<p className="text-sm text-muted-foreground mb-3">
+				<p className="mb-3 text-sm text-muted-foreground">
 					or click to browse. Supports NIfTI (.nii, .nii.gz) and DICOM (.dcm)
 					formats.
 				</p>
@@ -188,27 +188,27 @@ export const DropZone = () => {
 
 			{/* Patient Details */}
 			{files.length > 0 && (
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5 rounded-2xl bg-muted/30 border border-border">
+				<div className="grid grid-cols-1 gap-4 rounded-2xl border border-border bg-muted/30 p-5 sm:grid-cols-2">
 					<div className="space-y-2">
-						<label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+						<label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 							Patient Name
 						</label>
 						<Input
 							placeholder="e.g. John Doe"
 							value={patientName}
 							onChange={(e) => setPatientName(e.target.value)}
-							className="bg-background border-border/50"
+							className="border-border/50 bg-background"
 						/>
 					</div>
 					<div className="space-y-2">
-						<label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+						<label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 							Patient ID (Optional)
 						</label>
 						<Input
 							placeholder="e.g. PT-10492"
 							value={patientId}
 							onChange={(e) => setPatientId(e.target.value)}
-							className="bg-background border-border/50"
+							className="border-border/50 bg-background"
 						/>
 					</div>
 				</div>
@@ -216,7 +216,7 @@ export const DropZone = () => {
 
 			{/* Modality selector */}
 			<div>
-				<label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground mb-2 block">
+				<label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 					Expected Modalities
 				</label>
 				<div className="flex gap-2">
@@ -225,7 +225,7 @@ export const DropZone = () => {
 							key={mod}
 							onClick={() => toggleModality(mod)}
 							className={cn(
-								"px-4 py-2 rounded-lg text-sm font-medium transition-all",
+								"rounded-lg px-4 py-2 text-sm font-medium transition-all",
 								selectedModalities.has(mod)
 									? "bg-medical text-medical-foreground shadow-sm"
 									: "bg-muted text-muted-foreground hover:bg-muted/80",
@@ -239,13 +239,13 @@ export const DropZone = () => {
 
 			{/* Missing modality warning */}
 			{files.length > 0 && missingModalities.length > 0 && (
-				<div className="flex items-start gap-3 p-4 rounded-xl bg-warning/10 border border-warning/20">
-					<AlertCircle className="w-4 h-4 text-warning mt-0.5 shrink-0" />
+				<div className="flex items-start gap-3 rounded-xl border border-warning/20 bg-warning/10 p-4">
+					<AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
 					<div>
 						<p className="text-sm font-medium text-foreground">
 							Missing modalities detected
 						</p>
-						<p className="text-xs text-muted-foreground mt-0.5">
+						<p className="mt-0.5 text-xs text-muted-foreground">
 							The following expected modalities have not been uploaded:{" "}
 							<strong>{missingModalities.join(", ")}</strong>. This may affect
 							processing accuracy.
@@ -258,7 +258,7 @@ export const DropZone = () => {
 			{files.length > 0 && (
 				<div className="space-y-2">
 					<div className="flex items-center justify-between">
-						<label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+						<label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 							Uploaded Files ({files.length})
 						</label>
 						<Button
@@ -274,30 +274,30 @@ export const DropZone = () => {
 						{files.map((file) => (
 							<div
 								key={file.id}
-								className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border group"
+								className="group flex items-center gap-3 rounded-lg border border-border bg-muted/30 p-3"
 							>
-								<FileImage className="w-4 h-4 text-medical shrink-0" />
-								<div className="flex-1 min-w-0">
-									<p className="text-sm font-medium text-foreground truncate">
+								<FileImage className="h-4 w-4 shrink-0 text-medical" />
+								<div className="min-w-0 flex-1">
+									<p className="truncate text-sm font-medium text-foreground">
 										{file.name}
 									</p>
 									<p className="text-xs text-muted-foreground">
 										{formatSize(file.size)}
 										{file.modality && (
-											<span className="ml-2 px-1.5 py-0.5 rounded bg-medical/10 text-medical text-[10px] font-semibold">
+											<span className="ml-2 rounded bg-medical/10 px-1.5 py-0.5 text-[10px] font-semibold text-medical">
 												{file.modality}
 											</span>
 										)}
 									</p>
 								</div>
 								{file.status === "done" && (
-									<CheckCircle2 className="w-4 h-4 text-success" />
+									<CheckCircle2 className="h-4 w-4 text-success" />
 								)}
 								<button
 									onClick={() => removeFile(file.id)}
-									className="p-1 rounded text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+									className="rounded p-1 text-muted-foreground opacity-0 transition-opacity hover:text-foreground group-hover:opacity-100"
 								>
-									<X className="w-3.5 h-3.5" />
+									<X className="h-3.5 w-3.5" />
 								</button>
 							</div>
 						))}
@@ -311,9 +311,9 @@ export const DropZone = () => {
 					<Button
 						onClick={handleStartProcessing}
 						disabled={files.some((f) => f.status === "processing")}
-						className="bg-medical text-medical-foreground hover:bg-medical/90 gap-2 px-8"
+						className="gap-2 bg-medical px-8 text-medical-foreground hover:bg-medical/90"
 					>
-						<Upload className="w-4 h-4" />
+						<Upload className="h-4 w-4" />
 						{files.some((f) => f.status === "processing")
 							? "Processing..."
 							: `Start Processing (${files.length} file${files.length > 1 ? "s" : ""})`}

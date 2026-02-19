@@ -16,10 +16,10 @@ const Index = () => {
 	if (configLoading || !config || !user) {
 		return (
 			<div className="space-y-8">
-				<div className="h-20 bg-muted rounded-xl w-1/3" />
+				<div className="h-20 w-1/3 rounded-xl bg-muted" />
 				<div className="grid grid-cols-4 gap-4">
 					{[1, 2, 3, 4].map((i) => (
-						<div key={i} className="h-32 bg-muted rounded-xl" />
+						<div key={i} className="h-32 rounded-xl bg-muted" />
 					))}
 				</div>
 			</div>
@@ -36,16 +36,16 @@ const Index = () => {
 			{/* Header */}
 			<div className="flex items-center justify-between gap-4">
 				<div>
-					<h1 className="text-2xl font-bold text-foreground tracking-tight">
+					<h1 className="text-2xl font-bold tracking-tight text-foreground">
 						Dashboard
 					</h1>
-					<p className="text-sm text-muted-foreground mt-1">{welcomeMessage}</p>
+					<p className="mt-1 text-sm text-muted-foreground">{welcomeMessage}</p>
 				</div>
 				<Button
 					onClick={() => navigate("/upload")}
-					className="bg-medical text-medical-foreground hover:bg-medical/90 gap-2"
+					className="gap-2 bg-medical text-medical-foreground hover:bg-medical/90"
 				>
-					<Upload className="w-4 h-4" />
+					<Upload className="h-4 w-4" />
 					{config.dashboard.newScanButtonLabel}
 				</Button>
 			</div>

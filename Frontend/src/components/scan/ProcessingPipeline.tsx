@@ -39,13 +39,13 @@ const getStepStatus = (
 const statusIcon = (status: StepStatus) => {
 	switch (status) {
 		case "complete":
-			return <Check className="w-4 h-4" />;
+			return <Check className="h-4 w-4" />;
 		case "processing":
-			return <Loader2 className="w-4 h-4 animate-spin" />;
+			return <Loader2 className="h-4 w-4 animate-spin" />;
 		case "failed":
-			return <AlertCircle className="w-4 h-4" />;
+			return <AlertCircle className="h-4 w-4" />;
 		default:
-			return <Clock className="w-4 h-4" />;
+			return <Clock className="h-4 w-4" />;
 	}
 };
 
@@ -94,7 +94,7 @@ export const ProcessingPipeline = ({ scan }: ProcessingPipelineProps) => {
 
 	return (
 		<div className="space-y-1">
-			<h3 className="text-xs font-semibold tracking-wider uppercase text-muted-foreground mb-4">
+			<h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 				Processing Pipeline
 			</h3>
 			<div className="space-y-0">
@@ -110,7 +110,7 @@ export const ProcessingPipeline = ({ scan }: ProcessingPipelineProps) => {
 							<div className="flex flex-col items-center">
 								<div
 									className={cn(
-										"w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors",
+										"flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors",
 										statusColors[status],
 									)}
 								>
@@ -119,7 +119,7 @@ export const ProcessingPipeline = ({ scan }: ProcessingPipelineProps) => {
 								{idx < steps.length - 1 && (
 									<div
 										className={cn(
-											"w-0.5 flex-1 min-h-[40px] transition-colors",
+											"min-h-[40px] w-0.5 flex-1 transition-colors",
 											lineColors[status],
 										)}
 									/>
@@ -138,18 +138,18 @@ export const ProcessingPipeline = ({ scan }: ProcessingPipelineProps) => {
 								>
 									{step.label}
 								</p>
-								<p className="text-xs text-muted-foreground mt-0.5">
+								<p className="mt-0.5 text-xs text-muted-foreground">
 									{step.description}
 								</p>
 								{step.result && status === "complete" && (
-									<div className="mt-2 px-3 py-2 rounded-lg bg-muted/50 border border-border">
+									<div className="mt-2 rounded-lg border border-border bg-muted/50 px-3 py-2">
 										<p className="text-xs font-medium text-foreground">
 											{step.result}
 										</p>
 									</div>
 								)}
 								{status === "failed" && (
-									<div className="mt-2 px-3 py-2 rounded-lg bg-destructive/10 border border-destructive/20">
+									<div className="mt-2 rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2">
 										<p className="text-xs font-medium text-destructive">
 											Processing failed. Check input data and retry.
 										</p>

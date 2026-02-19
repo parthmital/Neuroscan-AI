@@ -73,10 +73,10 @@ const ScanLibrary = () => {
 	if (scansLoading || configLoading || !scans || !config) {
 		return (
 			<div className="space-y-6">
-				<div className="h-20 bg-muted rounded-xl w-1/3" />
+				<div className="h-20 w-1/3 rounded-xl bg-muted" />
 				<div className="grid grid-cols-3 gap-4">
 					{[1, 2, 3].map((i) => (
-						<div key={i} className="h-48 bg-muted rounded-xl" />
+						<div key={i} className="h-48 rounded-xl bg-muted" />
 					))}
 				</div>
 			</div>
@@ -94,10 +94,10 @@ const ScanLibrary = () => {
 	return (
 		<div className="space-y-6">
 			<div>
-				<h1 className="text-2xl font-bold text-foreground tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight text-foreground">
 					{config.scanLibrary.title}
 				</h1>
-				<p className="text-sm text-muted-foreground mt-1">
+				<p className="mt-1 text-sm text-muted-foreground">
 					{config.scanLibrary.subtitle}
 				</p>
 			</div>
@@ -105,12 +105,12 @@ const ScanLibrary = () => {
 			{/* Search */}
 			<div className="flex items-center gap-4">
 				<div className="relative w-72">
-					<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+					<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 					<Input
 						placeholder={config.scanLibrary.searchPlaceholder}
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
-						className="pl-9 h-9 bg-muted/50 border-none text-sm"
+						className="h-9 border-none bg-muted/50 pl-9 text-sm"
 					/>
 				</div>
 			</div>
@@ -164,23 +164,23 @@ const ScanLibrary = () => {
 				<Table>
 					<TableHeader>
 						<TableRow className="hover:bg-transparent">
-							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 								Patient
 							</TableHead>
-							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 								Modalities
 							</TableHead>
-							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 								Date
 							</TableHead>
-							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 								Result
 							</TableHead>
 
-							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 								Edit
 							</TableHead>
-							<TableHead className="px-6 py-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+							<TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 								Delete
 							</TableHead>
 						</TableRow>
@@ -190,7 +190,7 @@ const ScanLibrary = () => {
 							return (
 								<TableRow
 									key={scan.id}
-									className="cursor-pointer group hover:bg-muted/50"
+									className="group cursor-pointer hover:bg-muted/50"
 									onClick={() => navigate(`/scan/${scan.id}`)}
 								>
 									<TableCell className="px-6 py-4">
@@ -208,7 +208,7 @@ const ScanLibrary = () => {
 											{scan.modalities.map((m) => (
 												<span
 													key={m}
-													className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-muted text-muted-foreground"
+													className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground"
 												>
 													{m}
 												</span>
@@ -238,7 +238,7 @@ const ScanLibrary = () => {
 												handleEditClick(scan);
 											}}
 										>
-											<Pencil className="w-3.5 h-3.5 mr-1" />
+											<Pencil className="mr-1 h-3.5 w-3.5" />
 											Edit
 										</Button>
 									</TableCell>
@@ -270,7 +270,7 @@ const ScanLibrary = () => {
 												}
 											}}
 										>
-											<Trash2 className="w-3.5 h-3.5 mr-1" />
+											<Trash2 className="mr-1 h-3.5 w-3.5" />
 											Delete
 										</Button>
 									</TableCell>
@@ -282,11 +282,11 @@ const ScanLibrary = () => {
 			</div>
 
 			{filtered.length === 0 && (
-				<div className="text-center py-16 text-muted-foreground">
+				<div className="py-16 text-center text-muted-foreground">
 					<p className="text-sm font-medium">
 						{config.scanLibrary.noScansFound}
 					</p>
-					<p className="text-xs mt-1">{config.scanLibrary.adjustFilters}</p>
+					<p className="mt-1 text-xs">{config.scanLibrary.adjustFilters}</p>
 				</div>
 			)}
 		</div>

@@ -43,18 +43,18 @@ const ScanDetail = () => {
 	if (configLoading || scansLoading || !config) {
 		return (
 			<div className="space-y-6">
-				<div className="h-10 bg-muted rounded-xl w-24" />
-				<div className="h-20 bg-muted rounded-xl w-1/2" />
-				<div className="h-64 bg-muted rounded-xl" />
+				<div className="h-10 w-24 rounded-xl bg-muted" />
+				<div className="h-20 w-1/2 rounded-xl bg-muted" />
+				<div className="h-64 rounded-xl bg-muted" />
 			</div>
 		);
 	}
 
 	if (!scan) {
 		return (
-			<div className="text-center py-20">
+			<div className="py-20 text-center">
 				<p className="text-lg font-semibold text-foreground">Scan not found</p>
-				<p className="text-sm text-muted-foreground mt-1">
+				<p className="mt-1 text-sm text-muted-foreground">
 					The requested scan could not be located.
 				</p>
 				<Button variant="ghost" className="mt-4" onClick={() => navigate("/")}>
@@ -74,15 +74,15 @@ const ScanDetail = () => {
 					onClick={() => navigate(-1)}
 					className="text-muted-foreground"
 				>
-					<ArrowLeft className="w-4 h-4 mr-1" />
+					<ArrowLeft className="mr-1 h-4 w-4" />
 					{(config as AppConfig).scanDetail.backButton}
 				</Button>
 			</div>
 
 			<div className="flex items-start justify-between gap-4">
 				<div>
-					<div className="flex items-center gap-3 mb-1">
-						<h1 className="text-2xl font-bold text-foreground tracking-tight">
+					<div className="mb-1 flex items-center gap-3">
+						<h1 className="text-2xl font-bold tracking-tight text-foreground">
 							{scan.patientName}
 						</h1>
 					</div>
@@ -95,7 +95,7 @@ const ScanDetail = () => {
 							{scan.modalities.map((m) => (
 								<span
 									key={m}
-									className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-muted text-muted-foreground"
+									className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground"
 								>
 									{m}
 								</span>
@@ -104,15 +104,15 @@ const ScanDetail = () => {
 					</div>
 				</div>
 
-				<div className="flex gap-2 shrink-0">
+				<div className="flex shrink-0 gap-2">
 					{scan.results && (
 						<>
 							<Button variant="outline" size="sm" className="gap-1.5 text-xs">
-								<Download className="w-3.5 h-3.5" />
+								<Download className="h-3.5 w-3.5" />
 								{(config as AppConfig).scanDetail.exportButton}
 							</Button>
 							<Button variant="outline" size="sm" className="gap-1.5 text-xs">
-								<FileText className="w-3.5 h-3.5" />
+								<FileText className="h-3.5 w-3.5" />
 								{(config as AppConfig).scanDetail.reportButton}
 							</Button>
 						</>
@@ -137,7 +137,7 @@ const ScanDetail = () => {
 				<TabsContent value="viewer" className="space-y-0">
 					<div className="grid grid-cols-3 gap-6">
 						<div className="col-span-2">
-							<div className="flex justify-between items-center mb-4">
+							<div className="mb-4 flex items-center justify-between">
 								<h2 className="text-sm font-semibold text-foreground">
 									Scan Visualisation
 								</h2>
@@ -160,39 +160,39 @@ const ScanDetail = () => {
 							{/* Scan metrics */}
 							{scan.results && (
 								<div>
-									<h3 className="text-xs font-semibold tracking-wider uppercase text-muted-foreground mb-3">
+									<h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 										{(config as AppConfig).scanDetail.measurementsTitle}
 									</h3>
 									<div className="grid grid-cols-2 gap-2">
-										<div className="p-3 rounded-lg bg-muted/30 border border-border">
+										<div className="rounded-lg border border-border bg-muted/30 p-3">
 											<p className="text-xs text-muted-foreground">
 												Classification
 											</p>
-											<p className="text-sm font-semibold text-foreground mt-0.5">
+											<p className="mt-0.5 text-sm font-semibold text-foreground">
 												{scan.results.classification}
 											</p>
 										</div>
-										<div className="p-3 rounded-lg bg-muted/30 border border-border">
+										<div className="rounded-lg border border-border bg-muted/30 p-3">
 											<p className="text-xs text-muted-foreground">
 												Confidence
 											</p>
-											<p className="text-sm font-semibold text-foreground mt-0.5">
+											<p className="mt-0.5 text-sm font-semibold text-foreground">
 												{(scan.results.confidence * 100).toFixed(1)}%
 											</p>
 										</div>
-										<div className="p-3 rounded-lg bg-muted/30 border border-border">
+										<div className="rounded-lg border border-border bg-muted/30 p-3">
 											<p className="text-xs text-muted-foreground">
 												Total Volume
 											</p>
-											<p className="text-sm font-semibold text-foreground mt-0.5">
+											<p className="mt-0.5 text-sm font-semibold text-foreground">
 												{scan.results.tumorVolume} cm³
 											</p>
 										</div>
-										<div className="p-3 rounded-lg bg-muted/30 border border-border">
+										<div className="rounded-lg border border-border bg-muted/30 p-3">
 											<p className="text-xs text-muted-foreground">
 												WT / TC / ET
 											</p>
-											<p className="text-sm font-semibold text-foreground mt-0.5">
+											<p className="mt-0.5 text-sm font-semibold text-foreground">
 												{scan.results.wtVolume} / {scan.results.tcVolume} /{" "}
 												{scan.results.etVolume}
 											</p>
@@ -212,36 +212,36 @@ const ScanDetail = () => {
 
 				<TabsContent value="report">
 					{scan.results ? (
-						<div className="max-w-2xl bg-card rounded-xl border border-border p-8 space-y-6">
+						<div className="max-w-2xl space-y-6 rounded-xl border border-border bg-card p-8">
 							<div className="border-b border-border pb-4">
 								<h2 className="text-lg font-bold text-foreground">
 									{(config as AppConfig).scanDetail.reportTitle}
 								</h2>
-								<p className="text-xs text-muted-foreground mt-1">
+								<p className="mt-1 text-xs text-muted-foreground">
 									Generated on {scan.scanDate} · NeuroScan AI v2.4
 								</p>
 							</div>
 
 							<div className="grid grid-cols-2 gap-4 text-sm">
 								<div>
-									<p className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">
+									<p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 										Patient
 									</p>
-									<p className="font-medium text-foreground mt-1">
+									<p className="mt-1 font-medium text-foreground">
 										{scan.patientName}
 									</p>
-									<p className="text-muted-foreground text-xs">
+									<p className="text-xs text-muted-foreground">
 										{scan.patientId}
 									</p>
 								</div>
 								<div>
-									<p className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">
+									<p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 										Scan Date
 									</p>
-									<p className="font-medium text-foreground mt-1">
+									<p className="mt-1 font-medium text-foreground">
 										{scan.scanDate}
 									</p>
-									<p className="text-muted-foreground text-xs">
+									<p className="text-xs text-muted-foreground">
 										Modalities: {scan.modalities.join(", ")}
 									</p>
 								</div>
@@ -251,7 +251,7 @@ const ScanDetail = () => {
 								<h3 className="text-sm font-semibold text-foreground">
 									{(config as AppConfig).scanDetail.findingsTitle}
 								</h3>
-								<div className="p-4 rounded-lg bg-muted/30 border border-border space-y-2">
+								<div className="space-y-2 rounded-lg border border-border bg-muted/30 p-4">
 									<div className="flex items-center justify-between">
 										<span className="text-sm text-muted-foreground">
 											Tumour Detected
@@ -289,11 +289,11 @@ const ScanDetail = () => {
 									<h3 className="text-sm font-semibold text-foreground">
 										{(config as AppConfig).scanDetail.volumetricTitle}
 									</h3>
-									<div className="p-4 rounded-lg bg-muted/30 border border-border space-y-2">
+									<div className="space-y-2 rounded-lg border border-border bg-muted/30 p-4">
 										<div className="flex items-center justify-between">
 											<div className="flex items-center gap-2">
 												<div
-													className="w-2.5 h-2.5 rounded-sm"
+													className="h-2.5 w-2.5 rounded-sm"
 													style={{ background: overlayColors.wt }}
 												/>
 												<span className="text-sm text-muted-foreground">
@@ -307,7 +307,7 @@ const ScanDetail = () => {
 										<div className="flex items-center justify-between">
 											<div className="flex items-center gap-2">
 												<div
-													className="w-2.5 h-2.5 rounded-sm"
+													className="h-2.5 w-2.5 rounded-sm"
 													style={{ background: overlayColors.tc }}
 												/>
 												<span className="text-sm text-muted-foreground">
@@ -321,7 +321,7 @@ const ScanDetail = () => {
 										<div className="flex items-center justify-between">
 											<div className="flex items-center gap-2">
 												<div
-													className="w-2.5 h-2.5 rounded-sm"
+													className="h-2.5 w-2.5 rounded-sm"
 													style={{ background: overlayColors.et }}
 												/>
 												<span className="text-sm text-muted-foreground">
@@ -336,24 +336,24 @@ const ScanDetail = () => {
 								</div>
 							)}
 
-							<div className="border-t border-border pt-4 flex gap-3">
-								<Button className="bg-medical text-medical-foreground hover:bg-medical/90 gap-2">
-									<Download className="w-4 h-4" />
+							<div className="flex gap-3 border-t border-border pt-4">
+								<Button className="gap-2 bg-medical text-medical-foreground hover:bg-medical/90">
+									<Download className="h-4 w-4" />
 									{(config as AppConfig).scanDetail.downloadPDF}
 								</Button>
 								<Button variant="outline" className="gap-2">
-									<Download className="w-4 h-4" />
+									<Download className="h-4 w-4" />
 									{(config as AppConfig).scanDetail.exportCSV}
 								</Button>
 							</div>
 						</div>
 					) : (
-						<div className="text-center py-16 text-muted-foreground">
-							<FileText className="w-10 h-10 mx-auto mb-3 opacity-30" />
+						<div className="py-16 text-center text-muted-foreground">
+							<FileText className="mx-auto mb-3 h-10 w-10 opacity-30" />
 							<p className="text-sm font-medium">
 								{(config as AppConfig).scanDetail.notAvailable}
 							</p>
-							<p className="text-xs mt-1">
+							<p className="mt-1 text-xs">
 								{(config as AppConfig).scanDetail.processingRequired}
 							</p>
 						</div>

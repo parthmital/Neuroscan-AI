@@ -27,10 +27,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 	if (isLoading) {
 		return (
-			<div className="h-screen w-screen flex items-center justify-center bg-black">
+			<div className="flex h-screen w-screen items-center justify-center bg-black">
 				<div className="flex flex-col items-center gap-4">
-					<Loader2 className="w-10 h-10 text-medical" />
-					<p className="text-white/50 text-sm tracking-widest uppercase">
+					<Loader2 className="h-10 w-10 text-medical" />
+					<p className="text-sm uppercase tracking-widest text-white/50">
 						Initialising Security
 					</p>
 				</div>

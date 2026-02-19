@@ -58,22 +58,22 @@ const Login = () => {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-background/50 relative overflow-hidden">
+		<div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background/50">
 			{/* Background Decorations */}
-			<div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-medical/5 rounded-full blur-[120px]" />
-			<div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[120px]" />
+			<div className="absolute right-[-10%] top-[-10%] h-[40%] w-[40%] rounded-full bg-medical/5 blur-[120px]" />
+			<div className="absolute bottom-[-10%] left-[-10%] h-[40%] w-[40%] rounded-full bg-blue-500/5 blur-[120px]" />
 
-			<Card className="w-full max-w-md border-border/40 bg-card/50 backdrop-blur-xl shadow-2xl">
+			<Card className="w-full max-w-md border-border/40 bg-card/50 shadow-2xl backdrop-blur-xl">
 				<CardHeader className="space-y-3 text-center">
-					<div className="flex justify-center mb-2">
-						<div className="w-12 h-12 rounded-2xl bg-medical/20 flex items-center justify-center text-medical shadow-lg shadow-medical/10">
-							<BrainCircuit className="w-6 h-6" />
+					<div className="mb-2 flex justify-center">
+						<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-medical/20 text-medical shadow-lg shadow-medical/10">
+							<BrainCircuit className="h-6 w-6" />
 						</div>
 					</div>
 					<CardTitle className="text-3xl font-bold tracking-tight">
 						NeuroScan AI
 					</CardTitle>
-					<CardDescription className="text-muted-foreground text-base">
+					<CardDescription className="text-base text-muted-foreground">
 						Advanced medical imaging analysis platform
 					</CardDescription>
 				</CardHeader>
@@ -88,7 +88,7 @@ const Login = () => {
 								value={username}
 								onChange={(e) => setUsername(e.target.value)}
 								required
-								className="bg-background/50 border-border/50 focus:border-medical/50"
+								className="border-border/50 bg-background/50 focus:border-medical/50"
 							/>
 						</div>
 						<div className="space-y-2">
@@ -105,37 +105,37 @@ const Login = () => {
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 								required
-								className="bg-background/50 border-border/50 focus:border-medical/50"
+								className="border-border/50 bg-background/50 focus:border-medical/50"
 							/>
 						</div>
 						<Button
 							type="submit"
-							className="w-full bg-medical hover:bg-medical/90 text-white shadow-lg shadow-medical/20 h-11 text-base font-medium"
+							className="h-11 w-full bg-medical text-base font-medium text-white shadow-lg shadow-medical/20 hover:bg-medical/90"
 							disabled={isLoading}
 						>
 							{isLoading ? (
-								<Loader2 className="w-5 h-5" />
+								<Loader2 className="h-5 w-5" />
 							) : (
 								<>
 									Sign In
-									<ArrowRight className="ml-2 w-4 h-4" />
+									<ArrowRight className="ml-2 h-4 w-4" />
 								</>
 							)}
 						</Button>
 					</form>
 				</CardContent>
 				<CardFooter className="flex flex-col space-y-4 pt-2">
-					<div className="text-sm text-center text-muted-foreground">
+					<div className="text-center text-sm text-muted-foreground">
 						Don't have an account?{" "}
 						<Link
 							to="/register"
-							className="text-medical font-medium hover:underline"
+							className="font-medium text-medical hover:underline"
 						>
 							Create an account
 						</Link>
 					</div>
-					<div className="border-t border-border/50 w-full pt-4 flex items-center justify-center space-x-2 text-[10px] text-muted-foreground uppercase tracking-widest">
-						<ShieldCheck className="w-3 h-3" />
+					<div className="flex w-full items-center justify-center space-x-2 border-t border-border/50 pt-4 text-[10px] uppercase tracking-widest text-muted-foreground">
+						<ShieldCheck className="h-3 w-3" />
 						<span>Secure Medical-Grade Authentication</span>
 					</div>
 				</CardFooter>

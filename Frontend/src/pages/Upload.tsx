@@ -11,9 +11,9 @@ const Upload = () => {
 
 	if (isLoading || !config) {
 		return (
-			<div className="space-y-6 animate-pulse">
-				<div className="h-10 bg-muted rounded-xl w-24" />
-				<div className="h-20 bg-muted rounded-xl w-3/4" />
+			<div className="animate-pulse space-y-6">
+				<div className="h-10 w-24 rounded-xl bg-muted" />
+				<div className="h-20 w-3/4 rounded-xl bg-muted" />
 			</div>
 		);
 	}
@@ -27,16 +27,16 @@ const Upload = () => {
 					onClick={() => navigate("/")}
 					className="text-muted-foreground"
 				>
-					<ArrowLeft className="w-4 h-4 mr-1" />
+					<ArrowLeft className="mr-1 h-4 w-4" />
 					{(config as AppConfig).upload.backButton}
 				</Button>
 			</div>
 
 			<div>
-				<h1 className="text-2xl font-bold text-foreground tracking-tight">
+				<h1 className="text-2xl font-bold tracking-tight text-foreground">
 					{(config as AppConfig).upload.title}
 				</h1>
-				<p className="text-sm text-muted-foreground mt-1">
+				<p className="mt-1 text-sm text-muted-foreground">
 					{(config as AppConfig).upload.subtitle}
 				</p>
 			</div>

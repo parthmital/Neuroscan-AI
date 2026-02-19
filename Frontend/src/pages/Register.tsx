@@ -72,22 +72,22 @@ const Register = () => {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-background/50 relative overflow-hidden py-12 px-8">
+		<div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background/50 px-8 py-12">
 			{/* Background Decorations */}
-			<div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-medical/5 rounded-full blur-[120px]" />
-			<div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[120px]" />
+			<div className="absolute right-[-10%] top-[-10%] h-[40%] w-[40%] rounded-full bg-medical/5 blur-[120px]" />
+			<div className="absolute bottom-[-10%] left-[-10%] h-[40%] w-[40%] rounded-full bg-blue-500/5 blur-[120px]" />
 
-			<Card className="w-full max-w-2xl border-border/40 bg-card/50 backdrop-blur-xl shadow-2xl">
+			<Card className="w-full max-w-2xl border-border/40 bg-card/50 shadow-2xl backdrop-blur-xl">
 				<CardHeader className="space-y-3 text-center">
-					<div className="flex justify-center mb-2">
-						<div className="w-12 h-12 rounded-2xl bg-medical/20 flex items-center justify-center text-medical shadow-lg shadow-medical/10">
-							<UserPlus className="w-6 h-6" />
+					<div className="mb-2 flex justify-center">
+						<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-medical/20 text-medical shadow-lg shadow-medical/10">
+							<UserPlus className="h-6 w-6" />
 						</div>
 					</div>
 					<CardTitle className="text-3xl font-bold tracking-tight">
 						Create Medical Account
 					</CardTitle>
-					<CardDescription className="text-muted-foreground text-base">
+					<CardDescription className="text-base text-muted-foreground">
 						Join the network of neuroradiology professionals
 					</CardDescription>
 				</CardHeader>
@@ -102,7 +102,7 @@ const Register = () => {
 									value={formData.fullName}
 									onChange={handleChange}
 									required
-									className="bg-background/50 border-border/50 focus:border-medical/50"
+									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
 							<div className="space-y-2">
@@ -114,7 +114,7 @@ const Register = () => {
 									value={formData.email}
 									onChange={handleChange}
 									required
-									className="bg-background/50 border-border/50 focus:border-medical/50"
+									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
 							<div className="space-y-2">
@@ -125,7 +125,7 @@ const Register = () => {
 									value={formData.username}
 									onChange={handleChange}
 									required
-									className="bg-background/50 border-border/50 focus:border-medical/50"
+									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
 							<div className="space-y-2">
@@ -137,7 +137,7 @@ const Register = () => {
 									value={formData.password}
 									onChange={handleChange}
 									required
-									className="bg-background/50 border-border/50 focus:border-medical/50"
+									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
 							<div className="space-y-2">
@@ -147,7 +147,7 @@ const Register = () => {
 									placeholder="Chief Radiologist"
 									value={formData.title}
 									onChange={handleChange}
-									className="bg-background/50 border-border/50 focus:border-medical/50"
+									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
 							<div className="space-y-2">
@@ -157,49 +157,49 @@ const Register = () => {
 									placeholder="Neuroradiology"
 									value={formData.department}
 									onChange={handleChange}
-									className="bg-background/50 border-border/50 focus:border-medical/50"
+									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
-							<div className="space-y-2 col-span-2">
+							<div className="col-span-2 space-y-2">
 								<Label htmlFor="institution">Medical Institution</Label>
 								<Input
 									id="institution"
 									placeholder="General Hospital Center"
 									value={formData.institution}
 									onChange={handleChange}
-									className="bg-background/50 border-border/50 focus:border-medical/50"
+									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
 						</div>
 
 						<Button
 							type="submit"
-							className="w-full bg-medical hover:bg-medical/90 text-white shadow-lg shadow-medical/20 h-11 text-base font-medium"
+							className="h-11 w-full bg-medical text-base font-medium text-white shadow-lg shadow-medical/20 hover:bg-medical/90"
 							disabled={isLoading}
 						>
 							{isLoading ? (
-								<Loader2 className="w-5 h-5" />
+								<Loader2 className="h-5 w-5" />
 							) : (
 								<>
 									Complete Registration
-									<ArrowRight className="ml-2 w-4 h-4" />
+									<ArrowRight className="ml-2 h-4 w-4" />
 								</>
 							)}
 						</Button>
 					</form>
 				</CardContent>
 				<CardFooter className="flex flex-col space-y-4 pt-2">
-					<div className="text-sm text-center text-muted-foreground">
+					<div className="text-center text-sm text-muted-foreground">
 						Already have an account?{" "}
 						<Link
 							to="/login"
-							className="text-medical font-medium hover:underline"
+							className="font-medium text-medical hover:underline"
 						>
 							Sign in instead
 						</Link>
 					</div>
-					<div className="border-t border-border/50 w-full pt-4 flex items-center justify-center space-x-2 text-[10px] text-muted-foreground uppercase tracking-widest">
-						<ShieldCheck className="w-3 h-3" />
+					<div className="flex w-full items-center justify-center space-x-2 border-t border-border/50 pt-4 text-[10px] uppercase tracking-widest text-muted-foreground">
+						<ShieldCheck className="h-3 w-3" />
 						<span>Secure Medical-Grade Authentication</span>
 					</div>
 				</CardFooter>

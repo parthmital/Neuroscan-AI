@@ -53,7 +53,7 @@ export const StatsCards = () => {
 				{[1, 2, 3, 4].map((i) => (
 					<div
 						key={i}
-						className="bg-card rounded-xl border border-border p-5 h-32 animate-pulse"
+						className="h-32 animate-pulse rounded-xl border border-border bg-card p-5"
 					/>
 				))}
 			</div>
@@ -67,22 +67,22 @@ export const StatsCards = () => {
 				return (
 					<div
 						key={stat.label}
-						className={cn("bg-card rounded-xl border border-border p-5")}
+						className={cn("rounded-xl border border-border bg-card p-5")}
 					>
-						<div className="flex items-center justify-between mb-3">
-							<span className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+						<div className="mb-3 flex items-center justify-between">
+							<span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 								{stat.label}
 							</span>
 							<div
 								className={cn(
-									"w-9 h-9 rounded-lg flex items-center justify-center",
+									"flex h-9 w-9 items-center justify-center rounded-lg",
 									colorMap[stat.type] || "bg-muted text-muted-foreground",
 								)}
 							>
 								<Icon className={cn("w-4.5 h-4.5")} />
 							</div>
 						</div>
-						<p className="text-3xl font-bold text-foreground tracking-tight">
+						<p className="text-3xl font-bold tracking-tight text-foreground">
 							{stat.value}
 						</p>
 					</div>
