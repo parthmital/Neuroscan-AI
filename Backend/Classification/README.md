@@ -19,7 +19,7 @@ This project implements a sophisticated brain tumor classification system using 
 
 ### Data Sources
 
-The model integrates data from 11 different brain MRI datasets, providing comprehensive coverage and generalization:
+The model integrates data from 7 different brain MRI datasets, providing comprehensive coverage and generalization:
 
 - **Brain MRI Scans for Brain Tumor Classification**
 - **Brain Tumor MRI Scans**

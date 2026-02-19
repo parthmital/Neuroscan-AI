@@ -1,197 +1,117 @@
-# Neuroscan AI
+# NeuroScan AI
 
-A comprehensive medical imaging platform for brain tumor analysis using advanced deep learning models. This full-stack application combines a powerful FastAPI backend with a modern React frontend to provide automated detection, classification, and segmentation of brain tumors from MRI scans.
+## Project Overview
 
-## Overview
+NeuroScan AI is an AI-powered platform for automated brain tumor analysis from MRI scans. It provides radiologists and medical professionals with accurate detection, classification, and segmentation of brain tumors.
 
-Neuroscan AI is a production-ready medical imaging analysis platform that combines three specialized deep learning models with an intuitive web interface to provide comprehensive brain tumor analysis:
+This full-stack project uses AI/ML, backend development, frontend engineering, and medical imaging to create applications with high accuracy and usability.
 
-- **Tumor Detection**: Binary classification to identify presence/absence of tumors (80.07% accuracy, 85.99% AUC)
-- **Tumor Classification**: Multi-class classification (glioma, meningioma, pituitary, no tumor) with 87.41% accuracy
-- **Tumor Segmentation**: 3D volumetric segmentation for precise tumor delineation (WT: 84.7%, TC: 75.3%, ET: 76.1% Dice)
-
-## Architecture
-
-The application follows a modern full-stack architecture with clear separation of concerns:
-
-### Backend (FastAPI)
-
-- **FastAPI Web Framework**: High-performance async API server
-- **SQLModel Database**: SQLite-based data persistence with async support
-- **JWT Authentication**: Secure token-based user authentication
-- **AI Pipeline**: Integrated deep learning models for comprehensive analysis
-- **File Management**: Structured upload and processing of MRI files
-
-### Frontend (React)
-
-- **React 18.3.1**: Modern React with TypeScript for type-safe development
-- **Medical Imaging**: Cornerstone.js and VTK.js for professional visualization
-- **Real-time Updates**: Live processing status and progress tracking
-- **Responsive Design**: Mobile-first design with dark/light theme support
-
-## AI Models
-
-| Model              | Architecture                 | Task                          | Performance                          |
-| ------------------ | ---------------------------- | ----------------------------- | ------------------------------------ |
-| **Detection**      | ResNet50 (Transfer Learning) | Binary Tumor Detection        | 80.07% Accuracy, 85.99% AUC          |
-| **Classification** | ResNet50 (Multi-class)       | Tumor Type Classification     | 87.41% Accuracy                      |
-| **Segmentation**   | 3D nnU-Net                   | Volumetric Tumor Segmentation | WT: 84.7%, TC: 75.3%, ET: 76.1% Dice |
-
-## Key Features
-
-### Medical Imaging
-
-- **Multi-planar Views**: Axial, sagittal, and coronal planes
-- **Window/Level Adjustment**: Interactive contrast and brightness controls
-- **Zoom and Pan**: Smooth navigation within medical images
-- **Measurement Tools**: Distance, angle, and area measurements
-- **Segmentation Overlay**: AI-generated tumor segmentation visualization
-- **NIfTI Support**: Direct loading of medical imaging formats
-
-### AI Analysis Integration
-
-- **Real-time Processing**: Live status updates during analysis
-- **Multi-modal Support**: FLAIR, T1, T1CE, T2 MRI sequences
-- **Results Visualization**: Interactive display of detection, classification, and segmentation results
-- **Confidence Scores**: Transparent AI model confidence metrics
-- **Volume Analysis**: 3D tumor volume calculations and tracking
-
-### User Interface
-
-- **Comprehensive Dashboard**: Statistics, recent scans, and volume analysis charts
-- **Patient Management**: Complete scan library with detailed metadata
-- **Secure Authentication**: JWT-based user authentication and authorization
-- **Responsive Design**: Mobile-first design with dark/light theme support
-- **Accessibility**: WCAG 2.1 AA compliance with semantic HTML
-
-## Getting Started
-
-### Prerequisites
-
-- Python 3.8+ (for backend)
-- Node.js 18+ (for frontend)
-- Git
-
-### Backend Setup
-
-1. Navigate to the Backend directory
-2. Install dependencies: `pip install -r requirements.txt`
-3. Start the server: `uvicorn main:app --reload`
-
-### Frontend Setup
-
-1. Navigate to the Frontend directory
-2. Install dependencies: `npm install`
-3. Start the development server: `npm run dev`
-
-## API Endpoints
-
-### Authentication
-
-| Method | Endpoint             | Description                     |
-| ------ | -------------------- | ------------------------------- |
-| POST   | `/api/auth/register` | User registration               |
-| POST   | `/api/auth/login`    | User login and token generation |
-| GET    | `/api/auth/me`       | Get current user information    |
-| PUT    | `/api/auth/me`       | Update current user profile     |
-
-### Scan Management
-
-| Method | Endpoint               | Description                           |
-| ------ | ---------------------- | ------------------------------------- |
-| GET    | `/api/scans`           | List all scans for authenticated user |
-| GET    | `/api/scans/{scan_id}` | Get specific scan details             |
-| POST   | `/api/process-mri`     | Upload and process MRI files          |
-| PUT    | `/api/scans/{scan_id}` | Update scan metadata                  |
-| DELETE | `/api/scans/{scan_id}` | Delete scan and associated files      |
-
-### Image Retrieval
-
-| Method | Endpoint                                        | Description                             |
-| ------ | ----------------------------------------------- | --------------------------------------- |
-| GET    | `/api/scans/{scan_id}/slice/{slice_idx}`        | Get MRI slice as JPEG image             |
-| GET    | `/api/scans/{scan_id}/segmentation/{slice_idx}` | Get segmentation slice as PNG           |
-| GET    | `/api/scans/{scan_id}/download/{key}`           | Download original files or segmentation |
-
-## Processing Pipeline
-
-1. **File Upload**: Users upload multiple MRI modalities (FLAIR, T1, T1CE, T2)
-2. **File Organization**: Files are organized by scan ID and modality
-3. **Detection**: Binary tumor detection using ResNet50
-4. **Classification**: Multi-class tumor type classification (if tumor detected)
-5. **Segmentation**: 3D volumetric segmentation (if all 4 modalities available)
-6. **Results Storage**: Analysis results stored in database with file references
-
-## Supported MRI Modalities
-
-- **FLAIR**: Fluid-attenuated inversion recovery
-- **T1**: T1-weighted imaging
-- **T1CE**: T1-weighted with contrast enhancement
-- **T2**: T2-weighted imaging
-
-## Analysis Results
-
-Each processed scan returns comprehensive results including:
-
-```json
-{
-  "detected": true/false,
-  "classification": "glioma/meningioma/pituitary/notumor",
-  "confidence": 0.95,
-  "tumorVolume": 123.45,
-  "wtVolume": 156.78,
-  "tcVolume": 89.12,
-  "etVolume": 34.56
-}
-```
-
-## Technology Stack
+## Tech Stack
 
 ### Backend
 
-- **FastAPI**: High-performance async web framework
-- **SQLModel**: Modern ORM with Pydantic validation
-- **TensorFlow/Keras**: Deep learning model deployment
-- **PyTorch**: 3D segmentation model support
-- **JWT**: Secure authentication
+| Technology                       | Purpose                        |
+| -------------------------------- | ------------------------------ |
+| Python with FastAPI              | REST APIs                      |
+| TensorFlow and PyTorch           | Deep learning models           |
+| SQLModel (SQLAlchemy + Pydantic) | ORM and database management    |
+| SQLite                           | Lightweight, embedded database |
+| JWT                              | Secure authentication          |
+| OpenCV, Nibabel, scikit-image    | Image processing               |
 
 ### Frontend
 
-- **React 18.3.1**: Modern React with TypeScript
-- **Vite**: Fast development server and optimized builds
-- **Tailwind CSS**: Utility-first CSS framework
-- **shadcn/ui**: High-quality component library
-- **Cornerstone.js**: Professional medical image viewer
-- **VTK.js**: Advanced 3D visualization
+| Technology               | Purpose                                      |
+| ------------------------ | -------------------------------------------- |
+| React 18 with TypeScript | Type-safe, component-based UI                |
+| Vite                     | Fast development and builds                  |
+| Tailwind CSS             | Modern, responsive styling                   |
+| shadcn/ui                | Accessible UI components (built on Radix UI) |
+| React Router             | Client-side routing                          |
+| TanStack React Query     | Efficient data fetching and caching          |
+| Recharts                 | Interactive data visualization               |
+| Lucide React             | Consistent iconography                       |
 
-## Security Features
+## Key Features
 
-- **JWT Authentication**: Secure token-based authentication
-- **Password Hashing**: bcrypt for secure password storage
-- **CORS Support**: Configurable cross-origin resource sharing
-- **File Access Control**: User-specific file access restrictions
-- **Input Validation**: Comprehensive request validation
+| Feature               | Description                                                              |
+| --------------------- | ------------------------------------------------------------------------ |
+| User Authentication   | Secure JWT-based login and registration system                           |
+| MRI Scan Upload       | Support for multiple modalities (FLAIR, T1, T1CE, T2)                    |
+| AI Analysis           | Three specialized models for detection, classification, and segmentation |
+| Processing            | Efficient pipeline for scan analysis                                     |
+| Dashboard             | Comprehensive scan management and visualization                          |
+| 3D Segmentation Views | Precise tumor delineation with overlay masks                             |
+| Reports & Analytics   | Data-driven insights and performance metrics                             |
+| Responsive Design     | Mobile-first approach for accessibility across devices                   |
 
-## Model Details
+## Architecture
 
-### Detection Model (ResNet50)
+The application follows an architecture with clear separation between backend and frontend:
 
-- **Architecture**: ResNet50 with custom classification head
-- **Training Data**: BR35H, NAV, and MOS datasets
-- **Input**: 224×224 RGB images
-- **Output**: Binary tumor presence probability
+| Layer                   | Description                                                                             |
+| ----------------------- | --------------------------------------------------------------------------------------- |
+| Backend (API Layer)     | Handles business logic, AI inference, database operations, and file management          |
+| Frontend (Client Layer) | Provides intuitive user interface, data visualization, and client-side state management |
+| Database Layer          | SQLite for user and scan data persistence                                               |
+| AI Models               | Pre-trained and fine-tuned models stored in dedicated directories                       |
 
-### Classification Model (ResNet50)
+## Methodology & AI Models
 
-- **Architecture**: ResNet50 with frozen base layers
-- **Training Data**: 11 merged brain MRI datasets (46,920 images)
-- **Classes**: Glioma, Meningioma, Pituitary, No Tumor
-- **Input**: 224×224 RGB images
-- **Output**: 4-class probability distribution
+| Model          | Architecture                                       | Training                                                                                                      | Accuracy                                    | Purpose                                  |
+| -------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | ---------------------------------------- |
+| Detection      | ResNet50 with transfer learning                    | Multi-dataset integration (BR35H, NAV, MOS) with augmentation (histogram matching, geometric transformations) | 80.07% on test set with 85.99% AUC          | Binary classification for tumor presence |
+| Classification | ResNet50 fine-tuned for multi-class classification | 46,920 images across 4 classes (glioma, meningioma, pituitary, no tumor)                                      | 87.41% test accuracy                        | Identify tumor type                      |
+| Segmentation   | 3D U-Net                                           | BraTS2020 dataset with patch-based training                                                                   | WT Dice 0.847, TC Dice 0.753, ET Dice 0.761 | Precise 3D tumor boundary delineation    |
 
-### Segmentation Model (3D nnU-Net)
+**Methodology Highlights**:
 
-- **Architecture**: 3D U-Net with deep supervision
-- **Training Data**: BraTS2020 dataset (369 cases)
-- **Input**: 128×128×128 patches from 4 modalities
-- **Output**: 3-channel segmentation (WT, TC, ET)
+| Technique             | Benefit                       |
+| --------------------- | ----------------------------- |
+| Transfer learning     | Leverage pre-trained features |
+| Multi-GPU training    | Efficiency                    |
+| Data augmentation     | Robustness                    |
+| Hybrid loss functions | Convergence                   |
+
+## Requirements
+
+### Functional Requirements
+
+| Requirement                                                                | Description                                            |
+| -------------------------------------------------------------------------- | ------------------------------------------------------ |
+| User registration and authentication                                       | Allows users to create accounts and log in securely    |
+| Secure upload of MRI scans in NIfTI format                                 | Ensures safe file handling for medical data            |
+| Automated AI analysis pipeline (detection → classification → segmentation) | Processes scans in sequence for comprehensive analysis |
+| Scan result visualization with 3D overlays                                 | Displays results in an understandable format           |
+| Scan library management (view, edit, delete)                               | Enables users to manage their scan history             |
+| Report generation and export                                               | Produces reports for further use                       |
+| User profile management                                                    | Allows users to update their information               |
+
+### Non-Functional Requirements
+
+| Aspect      | Requirement                                               |
+| ----------- | --------------------------------------------------------- |
+| Performance | <10 seconds inference time per scan                       |
+| Accuracy    | >85% for classification and detection                     |
+| Security    | JWT tokens, password hashing with bcrypt, CORS protection |
+| Usability   | Intuitive interface with responsive design                |
+| Scalability | Modular architecture for easy extension                   |
+| Reliability | Error handling and graceful degradation                   |
+
+### User Requirements
+
+| User Type                          | Requirements                                        |
+| ---------------------------------- | --------------------------------------------------- |
+| Radiologists/Medical Professionals | Quick, accurate tumor analysis to support diagnosis |
+| Researchers                        | Access to detailed segmentation data for studies    |
+| Administrators                     | User management and system monitoring               |
+| General Users                      | Secure, HIPAA-compliant data handling               |
+
+### System Requirements
+
+| Component | Requirements                                          |
+| --------- | ----------------------------------------------------- |
+| Backend   | Python 3.8+, CUDA-compatible GPU for AI inference     |
+| Frontend  | Node.js 16+, modern web browser                       |
+| Storage   | Sufficient disk space for models (~1GB) and scan data |
+| Network   | Stable internet for model downloads and updates       |
